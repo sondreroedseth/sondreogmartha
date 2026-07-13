@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Martha &amp; Sondre</title>
+  <style>
+    :root {
+      --bg: #fbf7f2;
+      --ink: #4a4038;
+      --accent: #c9a86a;
+      --blush: #e8c4c0;
+      --sage: #a9b89e;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { height: 100%; margin: 0; }
+
+    body {
+      font-family: "Georgia", "Times New Roman", serif;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(232, 196, 192, 0.35), transparent 45%),
+        radial-gradient(circle at 80% 75%, rgba(169, 184, 158, 0.30), transparent 45%),
+        var(--bg);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .card {
+      max-width: 40rem;
+      padding: 3rem 2.5rem;
+      animation: rise 1s ease-out both;
+    }
+
+    .names {
+      font-size: clamp(2.4rem, 8vw, 4.2rem);
+      letter-spacing: 0.02em;
+      margin: 0;
+      font-weight: 400;
+    }
+
+    .amp {
+      color: var(--accent);
+      font-style: italic;
+      display: inline-block;
+      padding: 0 0.15em;
+    }
+
+    .divider {
+      width: 6rem;
+      height: 1px;
+      margin: 1.6rem auto;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      position: relative;
+    }
+
+    .divider::after {
+      content: "\2766";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg);
+      padding: 0 0.5rem;
+      color: var(--accent);
+      font-size: 1.1rem;
+    }
+
+    .tagline {
+      font-size: clamp(1.2rem, 4vw, 1.7rem);
+      font-style: italic;
+      color: var(--ink);
+      margin: 0.5rem 0 0;
+      opacity: 0.9;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1 class="names">Martha <span class="amp">&amp;</span> Sondre</h1>
+    <div class="divider" aria-hidden="true"></div>
+    <p class="tagline">Her kommer det magi&nbsp;&#10024;</p>
+  </main>
+</body>
+</html>
