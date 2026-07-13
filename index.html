@@ -3,98 +3,711 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Martha &amp; Sondre</title>
+  <title>Sondre & Martha | Bryllup</title>
+  <meta name="description" content="Velkommen til vår bryllupsnettside. Her finner du program, sted, RSVP og praktisk informasjon." />
   <style>
     :root {
-      --bg: #fbf7f2;
-      --ink: #4a4038;
-      --accent: #c9a86a;
-      --blush: #e8c4c0;
-      --sage: #a9b89e;
+      --bg: #faf7f2;
+      --paper: #fffdf8;
+      --text: #2f2a25;
+      --muted: #74695f;
+      --accent: #8f6f52;
+      --accent-dark: #624733;
+      --line: #e6ddd1;
+      --soft: #f1e8dc;
+      --shadow: 0 20px 60px rgba(60, 45, 30, 0.12);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
-    html, body { height: 100%; margin: 0; }
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
-      font-family: "Georgia", "Times New Roman", serif;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(232, 196, 192, 0.35), transparent 45%),
-        radial-gradient(circle at 80% 75%, rgba(169, 184, 158, 0.30), transparent 45%),
-        var(--bg);
-      color: var(--ink);
+      margin: 0;
+      font-family: Georgia, 'Times New Roman', serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(250, 247, 242, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 16px 24px;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 1.5rem;
+      gap: 24px;
+    }
+
+    .logo {
+      font-size: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-dark);
+    }
+
+    .hero {
+      min-height: 86vh;
+      display: grid;
+      place-items: center;
+      padding: 80px 24px;
+      background:
+        linear-gradient(rgba(250,247,242,0.72), rgba(250,247,242,0.9)),
+        url('https://tellusdmsmedia.newmindmedia.com/wsimgs/Lysebu_fasade_1756048608.jpg[ListImageLarge]') center/cover;
       text-align: center;
     }
 
-    .card {
-      max-width: 40rem;
-      padding: 3rem 2.5rem;
-      animation: rise 1s ease-out both;
+    .hero-card {
+      max-width: 800px;
+      background: rgba(255, 253, 248, 0.84);
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      padding: 56px 36px;
+      box-shadow: var(--shadow);
     }
 
-    .names {
-      font-size: clamp(2.4rem, 8vw, 4.2rem);
-      letter-spacing: 0.02em;
-      margin: 0;
+    .eyebrow {
+      font-family: Arial, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent-dark);
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(48px, 9vw, 112px);
+      line-height: 0.95;
+      margin: 0 0 24px;
       font-weight: 400;
     }
 
-    .amp {
-      color: var(--accent);
-      font-style: italic;
-      display: inline-block;
-      padding: 0 0.15em;
+    h2 {
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.05;
+      margin: 0 0 18px;
+      font-weight: 400;
     }
 
-    .divider {
-      width: 6rem;
-      height: 1px;
-      margin: 1.6rem auto;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    h3 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      font-weight: 400;
+    }
+
+    .hero p {
+      font-size: 20px;
+      color: var(--muted);
+      margin: 0 auto 32px;
+      max-width: 580px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 22px;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      font-family: Arial, sans-serif;
+      font-size: 15px;
+      transition: all 0.2s ease;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--accent-dark);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(98, 71, 51, 0.16);
+    }
+
+    section {
+      padding: 88px 24px;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .intro {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto;
+      font-size: 21px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-top: 40px;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 12px 36px rgba(60, 45, 30, 0.07);
+    }
+
+    .card p {
+      color: var(--muted);
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 52px;
+      align-items: center;
+    }
+
+    .photo {
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+    }
+
+    .details-list {
+      display: grid;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .detail {
+      border-left: 3px solid var(--accent);
+      padding-left: 18px;
+    }
+
+    .detail strong {
+      display: block;
+      font-family: Arial, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 12px;
+      color: var(--accent-dark);
+      margin-bottom: 3px;
+    }
+
+    .timeline {
+      max-width: 760px;
+      margin: 42px auto 0;
+      border-left: 1px solid var(--accent);
+    }
+
+    .timeline-item {
       position: relative;
+      padding: 0 0 34px 32px;
     }
 
-    .divider::after {
-      content: "\2766";
+    .timeline-item::before {
+      content: '';
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--bg);
-      padding: 0 0.5rem;
-      color: var(--accent);
-      font-size: 1.1rem;
+      left: -7px;
+      top: 6px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--accent);
     }
 
-    .tagline {
-      font-size: clamp(1.2rem, 4vw, 1.7rem);
-      font-style: italic;
-      color: var(--ink);
-      margin: 0.5rem 0 0;
-      opacity: 0.9;
+    .time {
+      font-family: Arial, sans-serif;
+      color: var(--accent-dark);
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
     }
 
-    @keyframes rise {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .faq {
+      display: grid;
+      gap: 14px;
+      margin-top: 36px;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .card { animation: none; }
+    .taler {
+      display: grid;
+      gap: 14px;
+      margin-top: 36px;
+    }
+
+    details {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px 22px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-size: 19px;
+    }
+
+    details p {
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      margin-bottom: 0;
+    }
+
+    .rsvp {
+      background: var(--soft);
+    }
+
+    form {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+      max-width: 760px;
+      margin: 36px auto 0;
+      font-family: Arial, sans-serif;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      color: var(--accent-dark);
+      margin: 18px 0 8px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 13px 14px;
+      font: inherit;
+      background: #fff;
+      color: var(--text);
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .submit {
+      margin-top: 22px;
+      width: 100%;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .note {
+      text-align: center;
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    footer {
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      font-family: Arial, sans-serif;
+    }
+
+    @media (max-width: 800px) {
+      .nav-inner {
+        flex-direction: column;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .grid,
+      .split,
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 64px 20px;
+      }
+
+      .hero-card {
+        padding: 42px 24px;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="card">
-    <h1 class="names">Martha <span class="amp">&amp;</span> Sondre</h1>
-    <div class="divider" aria-hidden="true"></div>
-    <p class="tagline">Her kommer det magi&nbsp;&#10024;</p>
-  </main>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="logo" href="#top">S & M</a>
+      <div class="nav-links">
+        <a href="#info">Info</a>
+        <a href="#sted">Sted</a>
+        <a href="#program">Program</a>
+        <a href="#rsvp">RSVP</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="hero-card">
+      <div class="eyebrow">Vi gifter oss</div>
+      <h1>Sondre<br />& Martha</h1>
+      <p>Lørdag 17. juli 2027 samler vi familie og venner for å feire kjærligheten, livet og en skikkelig fin fest.</p>
+      <div class="button-row">
+        <a class="btn primary" href="#rsvp">Svar på invitasjonen</a>
+        <a class="btn secondary" href="#program">Se programmet</a>
+      </div>
+    </div>
+  </header>
+
+  <section id="info">
+    <div class="container">
+      <p class="intro">Vi gleder oss enormt til å feire dagen sammen med dere. På denne siden finner du alt du trenger å vite før bryllupet: tidspunkt, sted, kleskode, overnatting og påmelding.</p>
+
+      <div class="grid">
+        <article class="card">
+          <h3>Dato</h3>
+          <p>Lørdag 17. juli 2027</p>
+        </article>
+        <article class="card">
+          <h3>Seremoni</h3>
+          <p>Kl. 13:00 i Holmenkollen Kapell</p>
+        </article>
+        <article class="card">
+          <h3>Fest</h3>
+          <p>Middag og fest fra kl. 17:00 på Lysebu Hotell</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="sted">
+    <div class="container split">
+      <div>
+        <div class="eyebrow">Praktisk informasjon</div>
+        <h2>Sted, transport og overnatting</h2>
+        <p></p>
+
+        <div class="details-list">
+          <div class="detail">
+            <strong>Overnatting</strong>
+            Vi holder av hotellrom på Lysebu som er åpen kun for gjester. Gi gjerne beskjed om der ønsker rom på hotellet, så fikser vi dette.
+          </div>
+          <div class="detail">
+            <strong>Seremoni</strong>
+            Holmenkollen Kapell
+          </div>
+          <div class="detail">
+            <strong>Festlokale</strong>
+            Lysebu Hotell
+          </div>
+          <div class="detail">
+  <strong>Transport</strong>
+
+  <p style="margin-bottom:20px;">
+    Her finner du raske valg for transport mellom
+    Holmenkollen kapell og Lysebu Hotell.
+  </p>
+
+  <div style="display:flex; flex-direction:column; gap:16px; margin-top:20px;">
+
+    <!-- RUTER -->
+    <a
+      href="https://reise.ruter.no/?fromId=__OSM-TopographicPlace-159200193__&fromType=__STOP_PLACE__&fromName=__Holmenkollen+kapell__&fromLongitude=10.67235&fromLatitude=59.96565&toId=__OSM-TopographicPlace-1768125233__&toType=__STOP_PLACE__&toName=__Lysebu__&toLongitude=10.655873&toLatitude=59.977601&mapLatitude=59.97319645104699&mapLongitude=10.65957980100697&mapZoom=13.691966479293267"
+      target="_blank"
+      style="
+        display:flex;
+        align-items:center;
+        gap:16px;
+        padding:16px 20px;
+        background:#ffffff;
+        border:1px solid #e6ddd1;
+        border-radius:18px;
+        text-decoration:none;
+        transition:0.2s;
+      "
+    >
+      <img
+        src="https://play-lh.googleusercontent.com/FaT-VDBI34y9s4EaHqDWHjkUVkvCxEme4-3ljWblhqyrnQn1cwuTmjWyAjAHAqBetg"
+        alt="Ruter"
+        style="width:42px; height:42px;"
+      >
+
+      <div>
+        <div style="font-weight:bold; color:#2f2a25;">
+          Ruter
+        </div>
+        <div style="color:#74695f; font-size:14px;">
+          Se kollektivrute
+        </div>
+      </div>
+    </a>
+
+    <!-- BOLT -->
+    <a
+      href="https://bolt.eu/no-no/"
+      target="_blank"
+      style="
+        display:flex;
+        align-items:center;
+        gap:16px;
+        padding:16px 20px;
+        background:#ffffff;
+        border:1px solid #e6ddd1;
+        border-radius:18px;
+        text-decoration:none;
+        transition:0.2s;
+      "
+    >
+      <img
+        src="https://s3-eu-west-1.amazonaws.com/tpd/logos/5c91fc8026dc22000182a60e/0x0.png"
+        alt="Bolt"
+        style="width:42px; height:42px;"
+      >
+
+      <div>
+        <div style="font-weight:bold; color:#2f2a25;">
+          Bolt
+        </div>
+        <div style="color:#74695f; font-size:14px;">
+          Bestill taxi mellom lokasjonene
+        </div>
+      </div>
+    </a>
+
+    <!-- UBER -->
+    <a
+      href="https://m.uber.com/ul/?action=setPickup&pickup=my_location&dropoff[formatted_address]=Lysebu%20Hotell%20Oslo&dropoff[latitude]=59.9797&dropoff[longitude]=10.6694"
+      target="_blank"
+      style="
+        display:flex;
+        align-items:center;
+        gap:16px;
+        padding:16px 20px;
+        background:#ffffff;
+        border:1px solid #e6ddd1;
+        border-radius:18px;
+        text-decoration:none;
+        transition:0.2s;
+      "
+    >
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
+        alt="Uber"
+        style="width:42px; height:42px; object-fit:contain;"
+      >
+
+      <div>
+        <div style="font-weight:bold; color:#2f2a25;">
+          Uber
+        </div>
+        <div style="color:#74695f; font-size:14px;">
+          Åpne Uber med destinasjon
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="photo">
+        <img src="C:\Users\sondre\OneDrive - EKER\Dokumenter\Privat\Bryllup\Bilder\Image (21).jpg" />
+      </div>
+    </div>
+  </section>
+
+  <section id="program">
+    <div class="container">
+      <div class="eyebrow" style="text-align:center;">Dagen</div>
+      <h2 style="text-align:center;">Program</h2>
+      <p class="intro">Tidene kan justeres litt nærmere dagen, men dette er planen slik den ser ut nå.</p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="time">13:00</div>
+          <h3>Seremoni i Holmenkollen Kapell</h3>
+          <p>Vi sier ja foran familie og venner.</p>
+        </div>
+	<div class="timeline-item">
+          <div class="time">13:45</div>
+          <h3>Kirkeseremoni er ferdig</h3>
+          <p>Bilder utenfor kirke og brudepar drar på fotografering</p>
+        </div>
+        <div class="timeline-item">
+          <div class="time">15:00</div>
+          <h3>Innsjekk, bobler og mingling</h3>
+          <p>Innsjekking for de som bor Lørdag til Søndag, og apretiff starter ute på terrassen.</p>
+        </div>
+	<div class="timeline-item">
+          <div class="time">Mellom 15:30 & 16:00</div>
+          <h3>Kakesplitting og videre mingling</h3>
+          <p>Brudeparet kommer tilbake fra fotografering og vi splitter brullupskake sammen.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="time">17:00</div>
+          <h3>Festmiddag</h3>
+          <p>Velkomst, mat, taler og god stemning.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="time">22:30</div>
+          <h3>Kake og dans</h3>
+          <p>Vi åpner dansegulvet og feirer videre.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="time">00:30</div>
+          <h3>Nattmat</h3>
+          <p>En liten matbit før kvelden går mot slutten.</p>
+        </div>
+	<div class="timeline-item">
+          <div class="time">01:30</div>
+          <h3>Farvell</h3>
+          <p>Festen er slutt og alle vender til sitt.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container split">
+      <div class="photo">
+        <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1200&q=80" alt="Brudepar" />
+      </div>
+      <div>
+        <div class="eyebrow">Kleskode og gaver</div>
+        <h2>Hva skal jeg ha på meg?</h2>
+        <p>Kleskode: Mørk dress / pent sommerlig antrekk. Deler av dagen kan foregå ute, så ta gjerne med en jakke dersom været tilsier det.</p>
+        <div class="details-list">
+          <div class="detail">
+            <strong>Gaver</strong>
+            Det viktigste er at du kommer. Ønsker du likevel å gi en gave, setter vi stor pris på bidrag til bryllupsreise.
+          </div>
+          <div class="detail">
+            <strong>Barn</strong>
+            Vi elsker barna deres, men denne dagen feires med voksne gjester, med mindre annet er avtalt.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rsvp" id="rsvp">
+    <div class="container">
+      <div class="eyebrow" style="text-align:center;">Påmelding</div>
+      <h2 style="text-align:center;">Svar på invitasjonen</h2>
+      <p class="intro">Gi oss beskjed innen 3. jan 2027.</p>
+      <a class="btn primary submit" href="https://docs.google.com/forms/d/e/1FAIpQLSdBeFsUgMu2QFkuO_EHi-DX7CW2iUi5kAuqHEokO210ag8jFw/viewform?usp=dialog" target="_blank"
+>     Svar på invitasjonen
+      </a>
+        <p class="note">Klikk på linken ovenfor for å ta deg til skjema for RSVP</p>
+      </form>
+    </div>
+  </section>
+
+<section id="Taler">
+    <div class="container">
+      <div class="eyebrow" style="text-align:center;">Taler/Underholdning</div>
+      <h2 style="text-align:center;">Ønsker du å bidra med noe under festmiddagen?</h2>
+      <p class="intro">Ta kontakt med våre toastmastere ved pr epost: toastmastersondreogmartha@gmail.com.</p>
+    </div>
+  </section>
+  <section id="faq">
+    <div class="container">
+      <div class="eyebrow" style="text-align:center;">Spørsmål</div>
+      <h2 style="text-align:center;">Ofte stilte spørsmål</h2>
+
+      <div class="faq">
+        <details>
+          <summary>Kan jeg ta med følge?</summary>
+          <p>Invitasjonen gjelder de navnene som står oppført. Ta kontakt dersom du er usikker.</p>
+        </details>
+        <details>
+          <summary>Når er fristen for RSVP?</summary>
+          <p>Vi ønsker svar innen 3. jan 2027.</p>
+        </details>
+        <details>
+          <summary>Er det parkering ved lokalet?</summary>
+          <p>Ja, hotellet har egen tilknyttet parkering. Følg parkeringsannvisning.</p>
+        </details>
+        <details>
+          <summary>Hvem kontakter jeg ved spørsmål?</summary>
+          <p>Kontakt toastmaster på [telefon/e-post], eller send oss en melding.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Vi gleder oss til å feire sammen med dere ♡</p>
+    <p>Sondre & Martha · 17. juli 2027</p>
+  </footer>
 </body>
 </html>
