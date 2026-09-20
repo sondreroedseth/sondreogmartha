@@ -31,13 +31,39 @@
 .seal-button:hover{transform:scale(1.06) rotate(-1deg)}.seal-inner{position:relative;color:#580a0e;border:1px solid #6c0a12;border-radius:50% 46% 52% 48%;background:radial-gradient(circle at 35% 27%,#ec6556 0 8%,#b51d25 42%,#851019 72%,#650a11 100%);box-shadow:inset 0 0 0 3px #d63d38,inset 0 0 0 5px #790d15,0 1px 1px #f1806e5c;text-shadow:0 1px #e76157;font-size:clamp(1rem,2vw,1.35rem)}
 .seal-inner:after{content:"";position:absolute;inset:11%;border:1px solid #5f0810b8;border-radius:50%;box-shadow:0 0 0 1px #e0504780}
 @media(max-width:760px){.seal-button{width:76px}.seal-inner{font-size:1rem}}
+/* Main-site visual language */
+.invitation{--site-bg:#faf7f2;--site-paper:#fffdf8;--site-text:#2f2a25;--site-muted:#74695f;--site-accent:#8f6f52;--site-accent-dark:#624733;--site-line:#e6ddd1;--site-soft:#f1e8dc;background:var(--site-bg);color:var(--site-text);font-family:Georgia,"Times New Roman",serif}
+.invitation .hero{min-height:68vh;padding:80px 24px;color:var(--site-text);background-position:center;background-size:cover}
+.invitation .hero:after{background:linear-gradient(rgba(250,247,242,.72),rgba(250,247,242,.9))}
+.invitation .hero-copy{width:min(800px,100%);padding:56px 36px;background:rgba(255,253,248,.84);border:1px solid var(--site-line);border-radius:32px;box-shadow:0 20px 60px rgba(60,45,30,.12);text-shadow:none}
+.invitation .hero-kicker,.invitation .section-label{font-family:Arial,sans-serif;font-size:13px;color:var(--site-accent-dark);letter-spacing:.18em;text-transform:uppercase}
+.invitation .hero h1{margin:18px 0 24px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(48px,9vw,112px);font-style:normal;font-weight:400;line-height:.95}
+.invitation .hero-date{font-family:Arial,sans-serif;font-size:15px;color:var(--site-muted);letter-spacing:.14em}
+.invitation .content{min-height:auto;grid-template-columns:1fr 1fr;gap:22px;padding:88px 24px;background:var(--site-bg)}
+.invitation .countdown-block,.invitation .note{align-content:start;width:100%;max-width:720px;margin:0 auto;padding:40px;background:var(--site-paper);border:1px solid var(--site-line);border-radius:28px;box-shadow:0 12px 36px rgba(60,45,30,.07)}
+.invitation .countdown-block{border-right:1px solid var(--site-line)}
+.invitation .countdown{gap:10px;width:100%;margin:30px auto 34px}
+.invitation .time{padding:18px 8px;background:var(--site-soft);border-radius:18px}
+.invitation .time strong{font-family:Georgia,"Times New Roman",serif;color:var(--site-accent-dark)}
+.invitation .time span{font-family:Arial,sans-serif;color:var(--site-muted)}
+.invitation .venues{color:var(--site-muted);line-height:1.6}
+.invitation .venues strong{color:var(--site-text);font-weight:400}
+.invitation .ornament{color:var(--site-accent);margin-bottom:24px}
+.invitation .guest-greeting{color:var(--site-accent-dark)}
+.invitation .note h2{margin:12px 0 18px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(34px,5vw,52px);font-weight:400;line-height:1.05;letter-spacing:0}
+.invitation .note p{color:var(--site-muted);line-height:1.6}
+.invitation .signature{color:var(--site-text)}
+.invitation .site-link{padding:13px 22px;color:#fff;background:var(--site-accent);border:1px solid var(--site-accent);border-radius:999px;font-family:Arial,sans-serif;font-size:15px;letter-spacing:0;text-transform:none;box-shadow:none;transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
+.invitation .site-link:hover{color:#fff;background:var(--site-accent-dark);transform:translateY(-2px);box-shadow:0 10px 24px rgba(98,71,51,.16)}
+@media(max-width:800px){.invitation .hero{min-height:62vh;padding:56px 20px}.invitation .hero-copy{padding:42px 24px}.invitation .content{grid-template-columns:1fr;padding:64px 20px}.invitation .countdown-block,.invitation .note{padding:32px 24px}.invitation .countdown-block{border-bottom:1px solid var(--site-line)}}
+@media(max-width:500px){.invitation .hero-copy{border-radius:24px}.invitation .hero h1{font-size:48px}.invitation .content{padding:40px 16px}.invitation .countdown-block,.invitation .note{padding:28px 18px;border-radius:24px}.invitation .countdown{gap:6px}.invitation .time{padding:14px 4px;border-radius:14px}.invitation .time strong{font-size:1.55rem}.invitation .time span{font-size:.5rem}}
 @media(prefers-reduced-motion:reduce){.fold-panel{transition:none!important}}
 </style></head><body>
 <section class="screen cover" id="cover" aria-label="Bryllupsinvitasjon"><div class="fold-panel panel-top"></div><div class="fold-panel panel-right"></div><div class="fold-panel panel-bottom"></div><div class="fold-panel panel-left"></div><div class="cover-copy"><div class="eyebrow">Invitasjon til</div><h1 class="names" id="guestCover">Anette <span>&amp;</span> Roger</h1></div><div class="seal-wrap"><button class="seal-button" id="openInvitation" aria-label="Åpne invitasjonen"><span class="seal-inner">M<br>S</span></button><button class="unseal" id="openText">Åpne invitasjonen</button></div></section>
 <main class="screen invitation" id="invitation">
 <section class="hero"><div class="hero-copy"><div class="hero-kicker">Hold av datoen</div><h1>Martha &amp; Sondre</h1><div class="hero-date">17 · 07 · 2027</div></div></section>
 <section class="content"><div class="countdown-block"><div class="section-label">Til vi feirer sammen</div><div class="countdown" aria-label="Nedtelling til bryllupet"><div class="time"><strong id="days">000</strong><span>dager</span></div><div class="time"><strong id="hours">00</strong><span>timer</span></div><div class="time"><strong id="minutes">00</strong><span>minutter</span></div><div class="time"><strong id="seconds">00</strong><span>sekunder</span></div></div><div class="venues"><strong>Holmenkollen Kapell</strong><br>Seremoni kl. 13.00<br><br><strong>Lysebu Hotell</strong><br>Middag og videre feiring fra kl. 15.00</div></div>
-<div class="note"><div class="ornament"><span>✦</span></div><div class="section-label">Bryllupsinvitasjon</div><p class="guest-greeting">Kjære <span id="guestInside">Anette og Roger</span>,</p><h2>Vi håper dere vil feire dagen med oss</h2><p>Det vil bety svært mye for oss å ha du/dere til stede når vi gir hverandre vårt ja. Vi gleder oss til en uforglemmelig dag sammen med du/dere. Besøk vår bryllupsnettide på linken nedenfor og svar på vår RSVP om du/dere kommer eller ikke</p><div class="signature">Med kjærlighet,<br>Martha &amp; Sondre</div><a class="site-link" id="mainSiteLink" href="https://marthaogsondre.no">Besøk bryllupsnettsiden →</a></div></section></main>
+<div class="note"><div class="ornament"><span>✦</span></div><div class="section-label">Bryllupsinvitasjon</div><p class="guest-greeting">Kjære <span id="guestInside">Anette og Roger</span>,</p><h2>Vi håper dere vil feire dagen med oss</h2><p>Det vil bety svært mye for oss å ha deg/dere til stede når vi gir hverandre vårt ja. Vi gleder oss til en uforglemmelig dag sammen med deg/dere. Besøk bryllupsnettsiden vår via lenken nedenfor, og gi beskjed i RSVP-skjemaet om du/dere kommer.</p><div class="signature">Med kjærlighet,<br>Martha &amp; Sondre</div><a class="site-link" id="mainSiteLink" href="https://marthaogsondre.no">Besøk bryllupsnettsiden →</a></div></section></main>
 <script>
 const cover=document.querySelector('#cover'),invitation=document.querySelector('#invitation'),folds=[...document.querySelectorAll('.fold-panel')];let busy=false,foldAnimations=[];
 const foldFrames=[{transform:'rotateX(0deg) translateY(0)'},{transform:'rotateX(102deg) translateY(-9%)'} ,{transform:'rotateY(0deg) translateX(0)'},{transform:'rotateY(-102deg) translateX(9%)'},{transform:'rotateX(0deg) translateY(0)'},{transform:'rotateX(-102deg) translateY(9%)'},{transform:'rotateY(0deg) translateX(0)'},{transform:'rotateY(102deg) translateX(-9%)'}];
