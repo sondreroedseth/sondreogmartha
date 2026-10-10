@@ -1,82 +1,211 @@
-<!doctype html><html lang="no"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#3f4824">
-<title>Martha & Sondre — Save the Date</title><meta name="description" content="Save the date for bryllupet til Martha og Sondre, 17. juli 2027.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Italiana&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='32' fill='%233f4824'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='serif' font-size='26' fill='%23e9d7a5'%3EMS%3C/text%3E%3C/svg%3E">
-<style>
-:root{--olive:#3f4824;--cream:#f2ede4;--ink:#3b372e;--gold:#cfb06b}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{font-family:"Cormorant Garamond",Georgia,serif;background:var(--olive);color:var(--cream)}button,a{font:inherit}.screen{position:fixed;inset:0;overflow:hidden}
-.cover{z-index:10;display:grid;place-items:center;background:radial-gradient(circle at 50% 37%,#ffffff12,transparent 32%),repeating-radial-gradient(circle at 30% 20%,#ffffff08 0 1px,transparent 1px 4px),linear-gradient(135deg,#4b542e,#343c20 60%,#495029)}
-.cover:before,.cover:after{content:"";position:absolute;top:-7%;width:72%;height:78%;background:linear-gradient(138deg,transparent 47.9%,#e7daa557 48%,#e7daa557 48.1%,transparent 48.25%),radial-gradient(ellipse at 50% 100%,transparent 0 56%,#0a0f0657 56.4%,transparent 58%);filter:drop-shadow(0 16px 12px #0c10056b);pointer-events:none}.cover:before{left:-28%}.cover:after{right:-28%;transform:scaleX(-1)}
-.flap{position:absolute;z-index:1;inset:0 0 auto;height:68%;clip-path:polygon(0 0,100% 0,50% 88%);background:linear-gradient(145deg,#ffffff12,transparent 37%,#00000024),repeating-radial-gradient(circle at 20% 30%,#ffffff08 0 1px,transparent 1px 4px),#465028;filter:drop-shadow(0 12px 11px #0b0f068c)}
-.flap:after{content:"";position:absolute;left:12%;right:12%;bottom:10%;height:34%;opacity:.8;background:radial-gradient(ellipse at 50% 100%,transparent 57%,#bec1797a 58% 58.5%,transparent 59%),radial-gradient(ellipse at 25% 100%,transparent 64%,#bec17947 65% 65.5%,transparent 66%),radial-gradient(ellipse at 75% 100%,transparent 64%,#bec17947 65% 65.5%,transparent 66%)}
-.cover-copy{position:relative;z-index:3;text-align:center;margin-top:-16vh;text-shadow:0 2px 12px #0003}.eyebrow{font-family:Italiana,serif;font-size:clamp(.72rem,1.5vw,.95rem);letter-spacing:.28em;text-transform:uppercase}.names{margin:.75rem 0 0;font-size:clamp(3rem,8vw,6.8rem);font-weight:400;font-style:italic;line-height:.95;color:#f5efdf}
-.seal-wrap{position:absolute;z-index:5;left:50%;top:64%;transform:translate(-50%,-50%);display:grid;justify-items:center;gap:2.2rem}.seal-button{width:clamp(112px,13vw,158px);aspect-ratio:1;border:0;border-radius:50%;padding:11px;cursor:pointer;background:linear-gradient(145deg,#f0d995,#8d6729 45%,#e3c67a 70%,#75511d);box-shadow:0 12px 22px #070a0380,inset 0 0 0 2px #fff5c4cc;transition:.25s}.seal-button:hover{transform:scale(1.045);filter:brightness(1.08)}.seal-button:focus-visible{outline:3px solid #fff;outline-offset:8px}.seal-inner{height:100%;border:2px solid #432d0ca6;border-radius:50%;display:grid;place-items:center;font-family:Italiana,serif;font-size:clamp(1.3rem,3vw,2rem);color:#604417;background:radial-gradient(circle at 35% 26%,#f2d98e,#bd8d3f 62%,#7a5420)}
-.unseal{border:0;background:none;color:#efe8d4;cursor:pointer;font-family:Italiana,serif;text-transform:uppercase;letter-spacing:.26em;font-size:clamp(.7rem,1.3vw,.9rem);white-space:nowrap}.unseal:after{content:"";display:block;width:46px;height:1px;background:var(--gold);margin:13px auto 0;transition:width .3s}.seal-wrap:hover .unseal:after{width:78px}
-.transition-panel{position:fixed;z-index:20;inset:0;background:var(--cream);transform:translateY(100%);pointer-events:none}.invitation{z-index:2;background:var(--cream);color:var(--ink);opacity:0;visibility:hidden;overflow-y:auto}.invitation.visible{opacity:1;visibility:visible}
-.hero{position:relative;min-height:58vh;display:grid;place-items:center;text-align:center;color:#fff;background:url("bryllup-hero.png") center 55%/cover no-repeat}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#12180c4d,#151a0e94)}.hero-copy{position:relative;z-index:1;padding:3rem 1.5rem;text-shadow:0 2px 20px #0009}.hero-kicker{font-family:Italiana,serif;text-transform:uppercase;letter-spacing:.28em;font-size:.8rem}.hero h1{font-size:clamp(3.5rem,10vw,8rem);font-style:italic;font-weight:400;line-height:.86;margin:1.1rem 0 .8rem}.hero-date{font-family:Italiana,serif;font-size:clamp(1rem,2vw,1.45rem);letter-spacing:.22em}
-.content{min-height:42vh;display:grid;grid-template-columns:1.1fr .9fr;background:var(--cream)}.countdown-block,.note{padding:clamp(2.4rem,6vw,6rem);display:grid;align-content:center;text-align:center}.countdown-block{border-right:1px solid #4c483333}.section-label{font-family:Italiana,serif;font-size:.75rem;letter-spacing:.24em;text-transform:uppercase;color:#77705e}.countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2rem auto 2.2rem;width:min(100%,620px)}.time strong{display:block;font-family:Italiana,serif;font-size:clamp(1.65rem,4vw,3.25rem);font-weight:400;color:#43492c}.time span{display:block;margin-top:.25rem;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#8a816f}.venues{font-size:clamp(1.1rem,2.3vw,1.4rem);line-height:1.5}.venues strong{font-weight:500}
-.ornament{display:flex;align-items:center;gap:13px;width:min(330px,80%);margin:0 auto 1.8rem;color:#9a8c68}.ornament:before,.ornament:after{content:"";height:1px;background:currentColor;flex:1}.note h2{font-family:Italiana,serif;font-size:clamp(1.35rem,3vw,2.1rem);font-weight:400;letter-spacing:.08em;margin:.6rem 0 1.2rem}.note p{font-size:clamp(1.05rem,2vw,1.35rem);line-height:1.5;max-width:510px;margin:.2rem auto}.guest-greeting{font-size:clamp(1.45rem,3vw,2rem)!important;font-style:italic;margin:1.1rem auto .7rem!important;color:#454a2e}.signature{font-size:clamp(1.9rem,4vw,3rem);font-style:italic;margin:1.3rem 0 1.7rem}.site-link{display:inline-block;justify-self:center;padding:.85rem 1.4rem;border:1px solid #5b603d;color:#3e442b;text-decoration:none;font-family:Italiana,serif;font-size:.73rem;letter-spacing:.16em;text-transform:uppercase;transition:.25s}.site-link:hover{background:#444b2c;color:#fff}
-@media(max-width:760px){.hero{min-height:55vh}.hero h1{font-size:3.8rem}.content{grid-template-columns:1fr}.countdown-block{border-right:0;border-bottom:1px solid #4c483333}.countdown-block,.note{padding:3rem 1.25rem}.countdown{gap:.35rem}.time strong{font-size:1.8rem}.time span{font-size:.56rem}}
-/* Four-panel reveal */
-.cover{perspective:1500px;background:transparent;isolation:isolate}.cover:before,.cover:after,.flap{display:none}.fold-panel{position:absolute;z-index:1;inset:-1px;transform-style:preserve-3d;backface-visibility:hidden;will-change:transform;filter:drop-shadow(0 0 1px #c5cb8252);background:radial-gradient(circle at 50% 50%,#ffffff12,transparent 38%),repeating-radial-gradient(circle at 30% 20%,#ffffff08 0 1px,transparent 1px 4px),linear-gradient(135deg,#4c5730,#343c20 68%,#465029)}.fold-panel:after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 44%,#d7d79b38 49.8%,#11160842 50.2%,transparent 55%);opacity:.8}.panel-top{clip-path:polygon(0 0,100% 0,50% 50%);transform-origin:50% 0}.panel-right{clip-path:polygon(100% 0,100% 100%,50% 50%);transform-origin:100% 50%}.panel-bottom{clip-path:polygon(0 100%,100% 100%,50% 50%);transform-origin:50% 100%}.panel-left{clip-path:polygon(0 0,50% 50%,0 100%);transform-origin:0 50%}.cover-copy{position:absolute;z-index:3;left:50%;top:23%;width:90%;margin:0;transform:translateX(-50%);pointer-events:none}.seal-wrap{top:50%;gap:1.8rem}.seal-button{background:linear-gradient(145deg,#c84f43,#7f181d 45%,#b72c2c 72%,#651015);box-shadow:0 12px 25px #12030399,inset 0 0 0 2px #f29b86b3}.seal-inner{color:#4b080b;border-color:#5d0d12;background:radial-gradient(circle at 35% 26%,#e66e5e,#a82127 62%,#681015);text-shadow:0 1px #e98d7a}.unseal{color:#f5efdf}.transition-panel{display:none}.invitation{opacity:1;visibility:visible}.cover.opened{pointer-events:none}.cover.opened .cover-copy,.cover.opened .seal-wrap{opacity:0;transition:opacity .28s ease}
-@media(max-width:760px){.cover-copy{top:18%}.names{font-size:3.4rem}.seal-wrap{top:50%}.seal-button{width:108px}}
-/* Bundle asset path */
-.hero{background-image:url("images/lysebu-fasade.jpg")}
-/* Lysebu photo on the four opening panels */
-.fold-panel{filter:none;background-color:#24271f;background-image:linear-gradient(180deg,rgba(12,16,10,.48),rgba(12,16,10,.18) 52%,rgba(12,16,10,.38)),url("images/lysebu-fasade.jpg");background-position:center;background-size:cover;background-repeat:no-repeat}
-.fold-panel:before,.fold-panel:after{display:none}
-.cover-copy{ text-shadow:0 2px 16px rgba(0,0,0,.65) }
-.unseal{ text-shadow:0 2px 10px rgba(0,0,0,.8) }
-.seal-wrap{gap:1.55rem}.seal-button{width:clamp(78px,8.5vw,104px);padding:6px;border-radius:47% 53% 45% 55%/52% 43% 57% 48%;background:linear-gradient(145deg,#de443e,#8c1019 45%,#bd1f25 72%,#690b12);box-shadow:0 9px 18px #1203038c,inset 1px 1px 0 #ff8b75,inset -2px -3px 4px #4d050b;filter:drop-shadow(0 2px 1px #320408)}
-.seal-button:hover{transform:scale(1.06) rotate(-1deg)}.seal-inner{position:relative;color:#580a0e;border:1px solid #6c0a12;border-radius:50% 46% 52% 48%;background:radial-gradient(circle at 35% 27%,#ec6556 0 8%,#b51d25 42%,#851019 72%,#650a11 100%);box-shadow:inset 0 0 0 3px #d63d38,inset 0 0 0 5px #790d15,0 1px 1px #f1806e5c;text-shadow:0 1px #e76157;font-size:clamp(1rem,2vw,1.35rem)}
-.seal-inner:after{content:"";position:absolute;inset:11%;border:1px solid #5f0810b8;border-radius:50%;box-shadow:0 0 0 1px #e0504780}
-.cover .eyebrow{font-size:clamp(.88rem,1.8vw,1.08rem)}
-.seal-wrap{gap:1.8rem}
-.seal-button{width:clamp(96px,10.5vw,126px);padding:0;background:transparent;box-shadow:none;filter:drop-shadow(0 10px 11px #12030370)}
-.seal-inner{width:100%;height:100%;border:0;background:transparent;box-shadow:none}
-.seal-inner:after{display:none}
-.seal-image{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none}
-.unseal{font-size:clamp(.82rem,1.5vw,1rem)}
-@media(max-width:760px){.seal-button{width:94px}.seal-inner{font-size:1rem}.cover .eyebrow{font-size:.88rem}.unseal{font-size:.8rem}}
-/* Main-site visual language */
-.invitation{--site-bg:#faf7f2;--site-paper:#fffdf8;--site-text:#2f2a25;--site-muted:#74695f;--site-accent:#8f6f52;--site-accent-dark:#624733;--site-line:#e6ddd1;--site-soft:#f1e8dc;background:var(--site-bg);color:var(--site-text);font-family:Georgia,"Times New Roman",serif}
-.invitation .hero{min-height:68vh;padding:80px 24px;color:var(--site-text);background-position:center;background-size:cover}
-.invitation .hero:after{background:linear-gradient(rgba(250,247,242,.72),rgba(250,247,242,.9))}
-.invitation .hero-copy{width:min(800px,100%);padding:56px 36px;background:rgba(255,253,248,.84);border:1px solid var(--site-line);border-radius:32px;box-shadow:0 20px 60px rgba(60,45,30,.12);text-shadow:none}
-.invitation .hero-kicker,.invitation .section-label{font-family:Arial,sans-serif;font-size:13px;color:var(--site-accent-dark);letter-spacing:.18em;text-transform:uppercase}
-.invitation .hero h1{margin:18px 0 24px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(48px,9vw,112px);font-style:normal;font-weight:400;line-height:.95}
-.invitation .hero-date{font-family:Arial,sans-serif;font-size:15px;color:var(--site-muted);letter-spacing:.14em}
-.invitation .content{min-height:auto;grid-template-columns:1fr 1fr;gap:22px;padding:88px 24px;background:var(--site-bg)}
-.invitation .countdown-block,.invitation .note{align-content:start;width:100%;max-width:720px;margin:0 auto;padding:40px;background:var(--site-paper);border:1px solid var(--site-line);border-radius:28px;box-shadow:0 12px 36px rgba(60,45,30,.07)}
-.invitation .countdown-block{border-right:1px solid var(--site-line)}
-.invitation .countdown{gap:10px;width:100%;margin:30px auto 34px}
-.invitation .time{padding:18px 8px;background:var(--site-soft);border-radius:18px}
-.invitation .time strong{font-family:Georgia,"Times New Roman",serif;color:var(--site-accent-dark)}
-.invitation .time span{font-family:Arial,sans-serif;color:var(--site-muted)}
-.invitation .venues{color:var(--site-muted);line-height:1.6}
-.invitation .venues strong{color:var(--site-text);font-weight:400}
-.invitation .ornament{color:var(--site-accent);margin-bottom:24px}
-.invitation .guest-greeting{color:var(--site-accent-dark)}
-.invitation .note h2{margin:12px 0 18px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(34px,5vw,52px);font-weight:400;line-height:1.05;letter-spacing:0}
-.invitation .note p{color:var(--site-muted);line-height:1.6}
-.invitation .signature{color:var(--site-text)}
-.invitation .site-link{padding:13px 22px;color:#fff;background:var(--site-accent);border:1px solid var(--site-accent);border-radius:999px;font-family:Arial,sans-serif;font-size:15px;letter-spacing:0;text-transform:none;box-shadow:none;transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
-.invitation .site-link:hover{color:#fff;background:var(--site-accent-dark);transform:translateY(-2px);box-shadow:0 10px 24px rgba(98,71,51,.16)}
-@media(max-width:800px){.invitation .hero{min-height:62vh;padding:56px 20px}.invitation .hero-copy{padding:42px 24px}.invitation .content{grid-template-columns:1fr;padding:64px 20px}.invitation .countdown-block,.invitation .note{padding:32px 24px}.invitation .countdown-block{border-bottom:1px solid var(--site-line)}}
-@media(max-width:500px){.invitation .hero-copy{border-radius:24px}.invitation .hero h1{font-size:48px}.invitation .content{padding:40px 16px}.invitation .countdown-block,.invitation .note{padding:28px 18px;border-radius:24px}.invitation .countdown{gap:6px}.invitation .time{padding:14px 4px;border-radius:14px}.invitation .time strong{font-size:1.55rem}.invitation .time span{font-size:.5rem}}
-@media(prefers-reduced-motion:reduce){.fold-panel{transition:none!important}}
-</style></head><body>
-<section class="screen cover" id="cover" aria-label="Bryllupsinvitasjon"><div class="fold-panel panel-top"></div><div class="fold-panel panel-right"></div><div class="fold-panel panel-bottom"></div><div class="fold-panel panel-left"></div><div class="cover-copy"><div class="eyebrow">Invitasjon til</div><h1 class="names" id="guestCover">Anette <span>&amp;</span> Roger</h1></div><div class="seal-wrap"><button class="seal-button" id="openInvitation" aria-label="Åpne invitasjonen"><span class="seal-inner"><img class="seal-image" src="images/voksstempel.png" alt=""></span></button><button class="unseal" id="openText">Åpne invitasjonen</button></div></section>
-<main class="screen invitation" id="invitation">
-<section class="hero"><div class="hero-copy"><div class="hero-kicker">Hold av datoen</div><h1>Martha &amp; Sondre</h1><div class="hero-date">17 · 07 · 2027</div></div></section>
-<section class="content"><div class="countdown-block"><div class="section-label">Til vi feirer sammen</div><div class="countdown" aria-label="Nedtelling til bryllupet"><div class="time"><strong id="days">000</strong><span>dager</span></div><div class="time"><strong id="hours">00</strong><span>timer</span></div><div class="time"><strong id="minutes">00</strong><span>minutter</span></div><div class="time"><strong id="seconds">00</strong><span>sekunder</span></div></div><div class="venues"><strong>Holmenkollen Kapell</strong><br>Seremoni kl. 13.00<br><br><strong>Lysebu Hotell</strong><br>Middag og videre feiring fra kl. 15.00</div></div>
-<div class="note"><div class="ornament"><span>✦</span></div><div class="section-label">Bryllupsinvitasjon</div><p class="guest-greeting">Kjære <span id="guestInside">Anette og Roger</span>,</p><h2 id="guestHeading">Vi håper du vil feire dagen med oss</h2><p id="guestMessage">Det vil bety svært mye for oss å ha deg til stede når vi gir hverandre vårt ja. Vi gleder oss til en uforglemmelig dag sammen med deg. Besøk bryllupsnettsiden vår via lenken nedenfor, og gi beskjed i svarskjemaet om du kommer.</p><div class="signature">Med kjærlighet,<br>Martha &amp; Sondre</div><a class="site-link" id="mainSiteLink" href="https://marthaogsondre.no">Besøk bryllupsnettsiden →</a></div></section></main>
-<script>
-const cover=document.querySelector('#cover'),invitation=document.querySelector('#invitation'),folds=[...document.querySelectorAll('.fold-panel')];let busy=false,foldAnimations=[];
-const foldFrames=[{transform:'rotateX(0deg) translateY(0)'},{transform:'rotateX(102deg) translateY(-9%)'} ,{transform:'rotateY(0deg) translateX(0)'},{transform:'rotateY(-102deg) translateX(9%)'},{transform:'rotateX(0deg) translateY(0)'},{transform:'rotateX(-102deg) translateY(9%)'},{transform:'rotateY(0deg) translateX(0)'},{transform:'rotateY(102deg) translateX(-9%)'}];
-async function openInvite(){if(busy||cover.classList.contains('opened'))return;busy=true;invitation.classList.add('visible');invitation.scrollTop=0;const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;if(!reduce)await document.querySelector('.seal-button').animate([{transform:'scale(1)'},{transform:'scale(.82) rotate(-3deg)'},{transform:'scale(1.08)'}],{duration:360,easing:'cubic-bezier(.2,.8,.2,1)'}).finished;cover.classList.add('opened');foldAnimations=folds.map((el,i)=>el.animate([foldFrames[i*2],{...foldFrames[i*2+1],opacity:0}],{duration:reduce?1:1150,delay:reduce?0:i*45,easing:'cubic-bezier(.72,0,.2,1)',fill:'forwards'}));await Promise.all(foldAnimations.map(a=>a.finished));cover.style.visibility='hidden';busy=false}
-document.querySelector('#openInvitation').addEventListener('click',openInvite);document.querySelector('#openText').addEventListener('click',openInvite);document.querySelector('#mainSiteLink').addEventListener('click',event=>{event.preventDefault();window.location.replace(event.currentTarget.href)});
-const invitationSettings={defaultGuest:'Anette og Roger'};const params=new URLSearchParams(location.search);const guestParam=params.get('gjest');const guest=(guestParam||invitationSettings.defaultGuest).trim();const multipleGuests=/\s+og\s+|&/i.test(guest);const subject=multipleGuests?'dere':'du',object=multipleGuests?'dere':'deg';document.querySelector('#guestHeading').textContent='Vi håper '+subject+' vil feire dagen med oss';document.querySelector('#guestMessage').textContent='Det vil bety svært mye for oss å ha '+object+' til stede når vi gir hverandre vårt ja. Vi gleder oss til en uforglemmelig dag sammen med '+object+'. Besøk bryllupsnettsiden vår via lenken nedenfor, og gi beskjed i svarskjemaet om '+subject+' kommer.';document.querySelector('#guestInside').textContent=guest;document.querySelector('#guestCover').textContent=guest.replace(/\s+og\s+/i,' & ');document.title='Invitasjon til '+guest+' — Martha & Sondre';if(guestParam){const mainSiteUrl=new URL(document.querySelector('#mainSiteLink').href);mainSiteUrl.searchParams.set('gjest',guest);document.querySelector('#mainSiteLink').href=mainSiteUrl.href;}if(!guestParam){document.querySelector('#guestCover').textContent='Personlig lenke kreves';document.querySelector('#openInvitation').disabled=true;document.querySelector('#openText').disabled=true;document.querySelector('#openText').textContent='Åpne den personlige lenken du har mottatt'}
-const target=new Date('2027-07-17T13:00:00+02:00').getTime();function tick(){const left=Math.max(0,target-Date.now()),d=Math.floor(left/86400000),h=Math.floor(left%86400000/3600000),m=Math.floor(left%3600000/60000),s=Math.floor(left%60000/1000);document.querySelector('#days').textContent=String(d).padStart(3,'0');document.querySelector('#hours').textContent=String(h).padStart(2,'0');document.querySelector('#minutes').textContent=String(m).padStart(2,'0');document.querySelector('#seconds').textContent=String(s).padStart(2,'0')}tick();setInterval(tick,1000);
-</script></body></html>
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f4e5e2">
+  <title>Invitasjon — Martha &amp; Sondre</title>
+  <meta name="description" content="Personlig invitasjon til bryllupet til Martha og Sondre, 17. juli 2027.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='32' fill='%23f4e5e2'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='serif' font-size='26' fill='%238c744c'%3EMS%3C/text%3E%3C/svg%3E">
+  <!-- Blomster og farger inspirert av Martha Olines Bryllupinspo-tavle. -->
+  <style>
+    :root{--paper:#fff7f0;--blush:#f5e5df;--ink:#655c51;--olive:#667052;--gold:#af9160;--line:#d9bca5;--serif:'Cormorant Garamond',Georgia,serif;--script:'Pinyon Script',cursive}
+    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{background:var(--blush);color:var(--ink);font-family:var(--serif)}button,a{font:inherit}button{cursor:pointer}a{color:inherit}button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:7px}[hidden]{display:none!important}
+    .paper{background-color:var(--paper);background-image:radial-gradient(ellipse at 18% 26%,#ffffff80,transparent 56%),repeating-linear-gradient(0deg,#ab7d5c03 0 1px,transparent 1px 4px)}
+    .cover{position:fixed;inset:0;z-index:10;perspective:1800px;isolation:isolate;overflow:hidden}
+    .fold-panel{position:absolute;inset:-1px;transform-style:preserve-3d;backface-visibility:hidden;will-change:transform;background-color:#f0ded9;background-image:linear-gradient(130deg,#fff8f39c,#e9cfca55),repeating-linear-gradient(12deg,#916b5305 0 1px,transparent 1px 3px)}
+    .fold-panel:before{content:'';position:absolute;inset:0;background:url('images/invitasjon-markblomster.png') left 50%/auto 85% no-repeat;opacity:.16;filter:saturate(.65)}
+    .fold-panel:after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 49.7%,#af927332 50%,transparent 50.3%),linear-gradient(45deg,transparent 49.7%,#af927332 50%,transparent 50.3%);pointer-events:none}
+    .panel-bottom{z-index:1;clip-path:polygon(0 100%,100% 100%,50% 50%);transform-origin:50% 100%;background-color:#edd7d1}
+    .panel-left{z-index:2;clip-path:polygon(0 0,50% 50%,0 100%);transform-origin:0 50%}
+    .panel-right{z-index:2;clip-path:polygon(100% 0,100% 100%,50% 50%);transform-origin:100% 50%}
+    .panel-right:before{transform:scaleX(-1)}
+    .panel-top{z-index:3;clip-path:polygon(0 0,100% 0,50% 50%);transform-origin:50% 0;background-color:#f6e8e3}
+    .cover-copy{position:absolute;z-index:4;left:50%;top:19%;width:86%;transform:translateX(-50%);text-align:center;pointer-events:none}
+    .eyebrow{font-size:11px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:#8e7a61}
+    .guest-names{margin:18px auto 0;font-size:clamp(38px,6vw,78px);font-weight:400;font-style:italic;line-height:1.15;color:#736650;overflow-wrap:anywhere}
+    .seal-wrap{position:absolute;z-index:5;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;justify-items:center;gap:24px;width:min(90%,460px)}
+    .seal-button{width:clamp(88px,11vw,120px);aspect-ratio:1;padding:0;border:0;background:none;filter:drop-shadow(0 7px 7px #876b4940);transition:transform .25s}
+    .seal-button:hover{transform:scale(1.045) rotate(-2deg)}.wax-seal{display:block;width:100%;height:100%}
+    .unseal{border:0;background:none;color:#806d54;font-size:12px;letter-spacing:.2em;text-transform:uppercase;line-height:1.7;text-align:center}
+    .unseal:after{content:'';display:block;width:40px;height:1px;background:var(--gold);margin:14px auto 0}
+    .cover-footer{position:absolute;z-index:4;bottom:max(6vh,26px);width:100%;text-align:center;font-size:11px;letter-spacing:.2em;color:#a18b76}
+    .cover.opening{pointer-events:none}.cover.opening .cover-copy,.cover.opening .seal-wrap,.cover.opening .cover-footer{opacity:0;transition:opacity .28s,filter .28s;filter:blur(3px)}
+    .cover.opening .panel-top{animation:openTop 1s cubic-bezier(.55,.02,.22,1) .1s forwards}
+    .cover.opening .panel-left{animation:openLeft 1.05s cubic-bezier(.55,.02,.22,1) .3s forwards}
+    .cover.opening .panel-right{animation:openRight 1.05s cubic-bezier(.55,.02,.22,1) .4s forwards}
+    .cover.opening .panel-bottom{animation:openBottom 1s cubic-bezier(.55,.02,.22,1) .5s forwards}
+    @keyframes openTop{to{transform:rotateX(170deg);opacity:0}}
+    @keyframes openLeft{to{transform:rotateY(-140deg);opacity:0}}
+    @keyframes openRight{to{transform:rotateY(140deg);opacity:0}}
+    @keyframes openBottom{to{transform:rotateX(-140deg);opacity:0}}
+    .invitation{position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth;overscroll-behavior-y:contain}
+    .hero{position:relative;min-height:100vh;min-height:100svh;display:grid;place-items:center;overflow:hidden;text-align:center;padding:70px 24px 100px}
+    .hero:before{content:'';position:absolute;inset:22px;border:1px solid #b9987040;pointer-events:none}
+    .floral{position:absolute;z-index:1;top:5%;width:clamp(170px,28vw,450px);height:90%;opacity:0;pointer-events:none;transform:translateX(-28%) scale(.94);transform-origin:bottom}
+    .floral-left{left:-3%}.floral-right{right:-3%;transform:translateX(28%) scale(.94)}
+    .floral img{width:100%;height:100%;object-fit:contain;object-position:bottom;--mirror:1}
+    .floral-right img{--mirror:-1;transform:scaleX(-1)}
+    .hero-copy{position:relative;z-index:2;width:min(620px,78%);color:var(--olive)}
+    .hero-kicker{margin:0 0 22px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;opacity:0}
+    .couple-names{margin:0;font-family:var(--script);font-size:clamp(70px,11vw,132px);font-weight:400;line-height:1.1}
+    .name-line{display:block;opacity:0;padding:0 .16em;clip-path:inset(0 100% 0 0)}
+    .ampersand{display:block;margin:2px 0;font-family:var(--serif);font-size:.31em;font-style:italic;font-weight:400;opacity:0}
+    .hero-rule{height:1px;width:68px;margin:30px auto 23px;background:var(--gold);opacity:0}
+    .hero-date{margin:0;font-size:17px;letter-spacing:.17em;opacity:0}
+    .hero-place{margin:15px 0 0;font-size:18px;font-style:italic;opacity:0}
+    .scroll-cue{position:absolute;z-index:3;bottom:34px;left:50%;transform:translateX(-50%);text-decoration:none;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#968269;text-align:center;opacity:0}
+    .scroll-cue span{display:block;font-size:23px;line-height:1.8;letter-spacing:0}
+    .is-revealed .floral{animation:flowersIn 1.8s cubic-bezier(.18,.65,.25,1) forwards}
+    .is-revealed .floral-right{animation-name:flowersRightIn;animation-delay:.2s}
+    .is-revealed .floral img{animation:flowerSway 9s ease-in-out 2s infinite alternate}
+    .is-revealed .hero-kicker{animation:fadeIn .9s ease .7s forwards}
+    .is-revealed .name-line{animation:writeName 1.8s cubic-bezier(.22,.61,.36,1) 1.1s forwards}
+    .is-revealed .name-line:last-child{animation-delay:2.15s}
+    .is-revealed .ampersand{animation:fadeIn 1s ease 1.9s forwards}
+    .is-revealed .hero-rule,.is-revealed .hero-date,.is-revealed .hero-place{animation:fadeIn 1.1s ease 3.3s forwards}
+    .is-revealed .scroll-cue{animation:fadeIn 1.1s ease 4s forwards}
+    @keyframes flowersIn{to{opacity:1;transform:translateX(0) scale(1)}}
+    @keyframes flowersRightIn{to{opacity:1;transform:translateX(0) scale(1)}}
+    @keyframes flowerSway{from{transform:scaleX(var(--mirror)) rotate(-1.5deg)}to{transform:scaleX(var(--mirror)) rotate(1.5deg)}}
+    @keyframes writeName{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+    @keyframes fadeIn{to{opacity:1}}
+    .details{padding:70px 24px 55px;text-align:center;max-width:1100px;margin:auto}
+    .section-label{margin:0;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#9b8161}
+    .guest-greeting{font-size:30px;font-style:italic;margin:24px 0 12px}
+    .details h2{font-size:clamp(32px,4.8vw,52px);line-height:1.12;font-weight:400;margin:0 auto 24px;max-width:600px}
+    .guest-message{max-width:600px;margin:0 auto;font-size:21px;line-height:1.6;color:#847568}
+    .signature{font-family:var(--script);font-size:28px;line-height:1.35;margin:22px 0 28px;color:#847568}.signature-intro{display:block;font-family:var(--serif);font-size:17px;line-height:1.6;margin-bottom:4px}
+    .site-link{display:inline-block;padding:14px 26px;text-decoration:none;border:1px solid var(--gold);border-radius:2px;color:#846943;background:#fff9f280;font-size:15px;letter-spacing:.02em;transition:background .2s}
+    .site-link:hover{background:#eed9c8}
+    .countdown-section{padding:0 24px 60px;text-align:center}
+    .countdown{display:flex;justify-content:center;gap:clamp(18px,5vw,65px);margin:26px auto 0}
+    .time strong{display:block;font-size:clamp(32px,6vw,56px);font-weight:400;line-height:1.1;color:var(--olive)}
+    .time span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9b8876}
+    .venues{max-width:1000px;margin:auto;padding:0 24px 70px;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center}
+    .venue-photo{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:2px}
+    .venue-copy{text-align:center;font-size:20px;line-height:1.6;color:#847568}.venue-copy h3{font-size:30px;font-weight:400;color:var(--olive);margin:8px 0 0}.venue-copy p{margin:8px 0 28px}
+    .invitation-footer{text-align:center;font-size:11px;letter-spacing:.15em;color:#a48c76;padding:0 20px 30px}
+    .no-script{position:fixed;z-index:20;inset:0;display:grid;place-content:center;padding:30px;text-align:center;background:var(--paper)}
+    @media(max-width:600px){.cover-copy{top:18%}.guest-names{font-size:clamp(35px,10vw,55px)}.seal-wrap{gap:23px}.seal-button{width:96px}.cover-footer{font-size:10px}.hero{padding:62px 16px 100px;min-height:max(610px,100svh)}.hero:before{inset:13px}.hero-copy{width:80%}.couple-names{font-size:clamp(62px,19vw,88px)}.hero-kicker{font-size:10px;letter-spacing:.19em}.hero-date{font-size:15px}.hero-place{font-size:17px}.floral{width:49%;height:83%;top:9%}.floral-left{left:-13%}.floral-right{right:-13%}.details{padding:54px 27px 45px}.guest-message{font-size:19px}.venues{grid-template-columns:1fr;gap:22px;padding:0 24px 45px}.venue-photo{max-height:300px}.venue-copy h3{font-size:28px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:1ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition:none!important;scroll-behavior:auto!important}.is-revealed .floral,.is-revealed .hero-kicker,.is-revealed .name-line,.is-revealed .ampersand,.is-revealed .hero-rule,.is-revealed .hero-date,.is-revealed .hero-place,.is-revealed .scroll-cue{opacity:1;clip-path:none}}
+  </style>
+</head>
+<body>
+  <section class="cover paper" id="cover" aria-label="Bryllupsinvitasjon">
+    <div class="fold-panel panel-bottom" aria-hidden="true"></div>
+    <div class="fold-panel panel-left" aria-hidden="true"></div>
+    <div class="fold-panel panel-right" aria-hidden="true"></div>
+    <div class="fold-panel panel-top" aria-hidden="true"></div>
+    <div class="cover-copy"><div class="eyebrow">En invitasjon til</div><h1 class="guest-names" id="guestCover">Personlig lenke kreves</h1></div>
+    <div class="seal-wrap">
+      <button class="seal-button" id="openInvitation" aria-label="Bryt seglet og åpne invitasjonen" disabled>
+        <svg class="wax-seal" viewBox="0 0 120 120" aria-hidden="true">
+          <defs><radialGradient id="waxGold" cx="35%" cy="25%" r="80%"><stop stop-color="#f4e2ad"/><stop offset=".45" stop-color="#cbb079"/><stop offset=".8" stop-color="#af8e52"/><stop offset="1" stop-color="#8e6d38"/></radialGradient><linearGradient id="rimGold" x2="1" y2="1"><stop stop-color="#f3ddaa"/><stop offset=".55" stop-color="#a6884e"/><stop offset="1" stop-color="#e5ca93"/></linearGradient></defs>
+          <path d="M61 5C70 3 75 10 83 12S95 15 99 24S111 35 110 45S119 59 113 69S111 83 102 89S95 104 84 106S70 118 59 113S43 117 34 110S18 108 14 96S3 82 7 70S2 54 8 43S8 26 19 21S30 9 41 10S52 3 61 5Z" fill="url(#waxGold)" stroke="#d1b479" stroke-width="2"/>
+          <circle cx="60" cy="60" r="42" fill="none" stroke="url(#rimGold)" stroke-width="6"/><circle cx="60" cy="60" r="36" fill="none" stroke="#96743a" stroke-width="1"/><circle cx="60" cy="60" r="34" fill="none" stroke="#f0d8a0" stroke-width="1" opacity=".75"/>
+          <text x="60" y="73" text-anchor="middle" font-family="Georgia,serif" font-size="33" fill="#f0d7a1">MS</text><text x="60" y="72" text-anchor="middle" font-family="Georgia,serif" font-size="33" fill="#8e713e">MS</text>
+        </svg>
+      </button>
+      <button class="unseal" id="openText" disabled>Åpne den personlige lenken du har mottatt</button>
+    </div>
+    <div class="cover-footer">MARTHA &amp; SONDRE · 17. JULI 2027</div>
+  </section>
+  <main class="invitation paper" id="invitation" hidden inert aria-hidden="true">
+    <section class="hero" id="invitationHero" tabindex="-1" aria-label="Martha og Sondres bryllupsinvitasjon">
+      <div class="floral floral-left" aria-hidden="true"><img src="images/invitasjon-markblomster.png" alt="" decoding="async"></div>
+      <div class="floral floral-right" aria-hidden="true"><img src="images/invitasjon-markblomster.png" alt="" decoding="async"></div>
+      <div class="hero-copy">
+        <p class="hero-kicker">Vi inviterer til bryllup</p>
+        <h1 class="couple-names" aria-label="Martha og Sondre"><span class="name-line">Martha</span><span class="ampersand">&amp;</span><span class="name-line">Sondre</span></h1>
+        <div class="hero-rule" aria-hidden="true"></div><p class="hero-date">17 · 07 · 2027</p><p class="hero-place">Holmenkollen Kapell &amp; Lysebu</p>
+      </div>
+      <a class="scroll-cue" href="#details">Bla ned for invitasjonen<span aria-hidden="true">↓</span></a>
+    </section>
+    <section class="details" id="details">
+      <p class="section-label">Bryllupsinvitasjon</p><p class="guest-greeting">Kjære <span id="guestInside"></span>,</p>
+      <h2 id="guestHeading">Vi håper du vil feire dagen med oss</h2>
+      <p class="guest-message" id="guestMessage"></p>
+      <p class="signature"><span class="signature-intro">Med kjærlighet,</span>Martha &amp; Sondre</p>
+      <a class="site-link" id="mainSiteLink" href="https://marthaogsondre.no">Besøk bryllupsnettsiden →</a>
+    </section>
+    <section class="countdown-section" aria-label="Nedtelling til bryllupet">
+      <p class="section-label">Til vi feirer sammen</p>
+      <div class="countdown"><div class="time"><strong id="days">000</strong><span>dager</span></div><div class="time"><strong id="hours">00</strong><span>timer</span></div><div class="time"><strong id="minutes">00</strong><span>minutter</span></div><div class="time"><strong id="seconds">00</strong><span>sekunder</span></div></div>
+    </section>
+    <section class="venues" aria-label="Sted og tid">
+      <img class="venue-photo" src="images/lysebu-fasade.jpg" alt="Fasaden til Lysebu Hotell" loading="lazy">
+      <div class="venue-copy"><p class="section-label">Dagen vår</p><h3>Holmenkollen Kapell</h3><p>Seremoni kl. 13.00</p><h3>Lysebu Hotell</h3><p>Middag og videre feiring fra kl. 15.00</p></div>
+    </section>
+    <footer class="invitation-footer">MARTHA &amp; SONDRE · 17. JULI 2027</footer>
+  </main>
+  <noscript><div class="no-script"><p>Aktiver JavaScript for å åpne den personlige invitasjonen.</p><a href="https://marthaogsondre.no">Besøk bryllupsnettsiden</a></div></noscript>
+  <script>
+    const cover = document.querySelector('#cover');
+    const invitation = document.querySelector('#invitation');
+    const sealButton = document.querySelector('#openInvitation');
+    const openText = document.querySelector('#openText');
+    const guestParam = new URLSearchParams(location.search).get('gjest');
+    const guest = (guestParam || '').trim();
+    let busy = false;
+    let opened = false;
+
+    if (guest) {
+      const multipleGuests = /\s+og\s+|&/i.test(guest);
+      const subject = multipleGuests ? 'dere' : 'du';
+      const object = multipleGuests ? 'dere' : 'deg';
+      document.querySelector('#guestCover').textContent = guest.replace(/\s+og\s+/i, ' & ');
+      document.querySelector('#guestInside').textContent = guest;
+      document.querySelector('#guestHeading').textContent = 'Vi håper ' + subject + ' vil feire dagen med oss';
+      document.querySelector('#guestMessage').textContent = 'Det vil bety svært mye for oss å ha ' + object + ' til stede når vi gir hverandre vårt ja. Vi gleder oss til en uforglemmelig dag sammen med ' + object + '. Besøk bryllupsnettsiden vår via lenken nedenfor, og gi beskjed i svarskjemaet om ' + subject + ' kommer.';
+      document.title = 'Invitasjon til ' + guest + ' — Martha & Sondre';
+      const siteUrl = new URL(document.querySelector('#mainSiteLink').href);
+      siteUrl.searchParams.set('gjest', guest);
+      document.querySelector('#mainSiteLink').href = siteUrl.href;
+      sealButton.disabled = false;
+      openText.disabled = false;
+      openText.textContent = 'Trykk på seglet for å åpne';
+    }
+
+    async function openInvite() {
+      if (!guest || busy || opened) return;
+      busy = true;
+      sealButton.disabled = true;
+      openText.disabled = true;
+      invitation.hidden = false;
+      invitation.scrollTop = 0;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // Restart the cover transition after the paper underneath has been laid out.
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      cover.classList.add('opening');
+      await new Promise(resolve => window.setTimeout(resolve, reduceMotion ? 0 : 1550));
+      cover.hidden = true;
+      invitation.inert = false;
+      invitation.setAttribute('aria-hidden', 'false');
+      invitation.classList.add('is-revealed');
+      document.querySelector('#invitationHero').focus({preventScroll:true});
+      opened = true;
+      busy = false;
+    }
+    sealButton.addEventListener('click', openInvite);
+    openText.addEventListener('click', openInvite);
+    document.querySelector('#mainSiteLink').addEventListener('click', event => {
+      event.preventDefault();
+      window.location.replace(event.currentTarget.href);
+    });
+    const target = new Date('2027-07-17T13:00:00+02:00').getTime();
+    function tick() {
+      const left = Math.max(0, target - Date.now());
+      document.querySelector('#days').textContent = String(Math.floor(left / 86400000)).padStart(3, '0');
+      document.querySelector('#hours').textContent = String(Math.floor(left % 86400000 / 3600000)).padStart(2, '0');
+      document.querySelector('#minutes').textContent = String(Math.floor(left % 3600000 / 60000)).padStart(2, '0');
+      document.querySelector('#seconds').textContent = String(Math.floor(left % 60000 / 1000)).padStart(2, '0');
+    }
+    tick();
+    window.setInterval(tick, 1000);
+  </script>
+</body>
+</html>
