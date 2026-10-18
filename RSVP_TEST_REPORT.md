@@ -4,6 +4,8 @@ Dato: 18. oktober 2026. Privat Google-ark er opprettet og Apps Script er distrib
 
 Senere samme dag godkjente eieren publisering for testing på domenet. Konfigurasjonen er aktivert, de nyeste endringene fra origin/main er bevart, og de 18 automatiske testene består også med produksjonskonfigurasjonen. Den siste kontrollen av publisert domene skal dokumenteres etter distribusjon.
 
+Publiseringskontroll: GitHub main og marthaogsondre.no er oppdatert. En egen testinvitasjon hentet to navn fra Google, seglet åpnet, og lenken videre bevarte invitasjonskoden. Hovedsidens ekte Google-skjema viste begge navnene. Ja, fredag ja, fiktivt matbehov og overnatting ja ble sendt fra domenet; bekreftelse kom etter lagring, og verdiene ble kontrollert direkte i Sheets med revisjon 1. Testsvaret ble deretter nullstilt. Ved mobilbredde 390 px målte hovedsiden ingen vannrett overflyt; skjemaets innhold var 327 px bredt uten overflyt og rammehøyden fulgte innholdet. Skjemaet og bekreftelsen er visuelt kontrollert. To tydelig merkede testgjester beholdes midlertidig for eierens egen testing, i tillegg til den faktiske gjestelisten. Testlenken og gjesteregisteret ligger kun i private, Git-ignorerte filer. Privat nettleservindu og fysisk mobil er fortsatt ikke kontrollert.
+
 ## Automatiske tester
 
 Kommando: `node --test tests/rsvp.test.cjs` fra github-repository.
