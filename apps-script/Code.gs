@@ -4,7 +4,7 @@ const RSVP = Object.freeze({
   deadline: '2027-01-04T00:00:00+01:00',
   origins: ['https://marthaogsondre.no', 'https://www.marthaogsondre.no'],
   invitationHeaders: ['Invitation ID', 'Code hash', 'Active'],
-  guestHeaders: ['Invitation ID', 'Guest ID', 'Name', 'Wedding', 'Friday', 'Allergies', 'Accommodation', 'Room type', 'RSVP status', 'Last updated', 'Revision', 'Last request ID', 'Last request hash']
+  guestHeaders: ['Invitation ID', 'Guest ID', 'Name', 'Wedding', 'Friday', 'Allergies', 'Accommodation', 'Room type', 'RSVP status', 'Last updated', 'Revision', 'Last request ID', 'Last request hash', 'Personlig invitasjonslenke', 'Drikkepakke']
 });
 
 function config_() {
@@ -47,7 +47,7 @@ function authorized_(book, token) {
   return String(matches[0][0]);
 }
 function guestData_(row) {
-  return { id: String(row[1]), name: String(row[2]), wedding: row[3] || '', friday: row[4] || '', allergies: row[5] || '', accommodation: row[6] || '', status: row[8] || 'Ikke svart', updated: row[9] instanceof Date ? row[9].toISOString() : String(row[9] || ''), revision: Number(row[10]) || 0 };
+  return { id: String(row[1]), name: String(row[2]), wedding: row[3] || '', friday: row[4] || '', allergies: row[5] || '', accommodation: row[6] || '', drinkPackage: row[14] || '', status: row[8] || 'Ikke svart', updated: row[9] instanceof Date ? row[9].toISOString() : String(row[9] || ''), revision: Number(row[10]) || 0 };
 }
 function getInvitation(token) {
   const lock = LockService.getScriptLock();
@@ -70,13 +70,15 @@ function validate_(input) {
   if (typeof input.requestId !== 'string' || !/^[a-f0-9]{32,64}$/.test(input.requestId)) throw new Error('Ugyldig innsending. Last siden på nytt.');
   if (!Number.isSafeInteger(input.revision) || input.revision < 0) throw new Error('Ugyldig versjon. Last inn svarene på nytt.');
   const wedding = answer_(input.wedding), friday = answer_(input.friday);
-  let allergies = '', accommodation = '';
+  let allergies = '', accommodation = '', drinkPackage = '';
   if (wedding === 'Ja') {
+    if (!['Med alkohol', 'Uten alkohol'].includes(input.drinkPackage)) throw new Error('Velg drikkepakke med eller uten alkohol. Last siden på nytt hvis du ikke ser valget.');
+    drinkPackage = input.drinkPackage;
     accommodation = answer_(input.accommodation);
     if (typeof input.allergies !== 'string' || input.allergies.length > 1000 || /[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(input.allergies)) throw new Error('Matbehov må være tekst på maksimalt 1000 tegn.');
     allergies = input.allergies.trim();
   }
-  return { guestId: input.guestId, requestId: input.requestId, revision: input.revision, wedding, friday, allergies, accommodation };
+  return { guestId: input.guestId, requestId: input.requestId, revision: input.revision, wedding, friday, allergies, accommodation, drinkPackage };
 }
 function safeCell_(value) {
   // Prevent spreadsheet formulas from user-controlled text, including leading spaces.
@@ -101,10 +103,11 @@ function saveGuest(token, input) {
     // Check after acquiring the lock, so waiting never permits a late write.
     if (Date.now() >= config_().deadline) throw new Error('Svarfristen 3. januar 2027 er passert. Kontakt oss hvis noe har endret seg.');
     if ((Number(row[10]) || 0) !== data.revision) throw new Error('Svaret er endret i et annet vindu. Hent siste svar før du prøver igjen.');
-    const updated = row.slice(0, RSVP.guestHeaders.length);
+    const updated = Array.from({ length: RSVP.guestHeaders.length }, (_, index) => row[index] ?? '');
     updated[3] = data.wedding; updated[4] = data.friday; updated[5] = safeCell_(data.allergies);
     updated[6] = data.accommodation; updated[7] = ''; updated[8] = 'Svart'; updated[9] = new Date();
     updated[10] = data.revision + 1; updated[11] = data.requestId; updated[12] = requestHash;
+    updated[14] = data.drinkPackage;
     table.sheet.getRange(i + 2, 1, 1, updated.length).setValues([updated]);
     SpreadsheetApp.flush();
     // Confirm only after the write and flush have succeeded.

@@ -26,7 +26,7 @@ http.createServer(async (req, res) => {
         const input = args[1], guest = guests.find(g => g.id === input.guestId);
         if (!guest) throw new Error('Ugyldig gjest.');
         if (guest.revision !== input.revision) throw new Error('Svaret er endret i et annet vindu.');
-        Object.assign(guest, input, { revision: guest.revision + 1, status: 'Svart', allergies: input.wedding === 'Ja' ? input.allergies : '', accommodation: input.wedding === 'Ja' ? input.accommodation : '' });
+        Object.assign(guest, input, { revision: guest.revision + 1, status: 'Svart', allergies: input.wedding === 'Ja' ? input.allergies : '', accommodation: input.wedding === 'Ja' ? input.accommodation : '', drinkPackage: input.wedding === 'Ja' ? input.drinkPackage : '' });
         result = { guest, duplicate: false };
       } else throw new Error('Ukjent kall.');
       res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify({ result }));

@@ -15,7 +15,7 @@
 <button id="generate">Lag invitasjonene</button><p id="status" role="status"></p>
 <div id="output" hidden>
 <h2>1. Invitasjonsregister</h2><p>Kopier inn i <strong>Invitations</strong>, fra første tomme rad under overskriften. Kolonnene er Invitation ID, Code hash, Active.</p><textarea id="invitations" readonly aria-label="Rader til Invitations"></textarea>
-<h2>2. Gjester</h2><p>Kopier inn i <strong>Guests</strong>, fra første tomme rad under overskriften. Alle 13 kolonner må følge med.</p><textarea id="guests" readonly aria-label="Rader til Guests"></textarea>
+<h2>2. Gjester</h2><p>Kopier inn i <strong>Guests</strong>, fra første tomme rad under overskriften. Alle 15 kolonner må følge med.</p><textarea id="guests" readonly aria-label="Rader til Guests"></textarea>
 <h2>3. Private lenker</h2><p>Lagre disse privat før du lukker siden. Send hver lenke kun til personene på den invitasjonen. Lenken gir tilgang til alle svar og matbehov innen den invitasjonen. Ikke legg resultatene i GitHub eller publiseringsmappen.</p><textarea id="links" readonly aria-label="Private invitasjonslenker"></textarea>
 <p>For å trekke tilbake en lenke: sett Active til FALSE i Invitations. For å bytte en kode uten å miste svar: behold Invitation ID og Guest ID, og bytt bare kodehashen. Se RSVP_SETUP.md.</p>
 </div>
@@ -39,7 +39,7 @@
         const invitationId = crypto.randomUUID(), token = hex(crypto.getRandomValues(new Uint8Array(32)));
         const hash = hex(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))));
         invitations.push([invitationId, hash, 'TRUE'].join('\t'));
-        names.forEach(name => guests.push([invitationId, crypto.randomUUID(), cell(name), '', '', '', '', '', 'Ikke svart', '', 0, '', ''].join('\t')));
+        names.forEach(name => guests.push([invitationId, crypto.randomUUID(), cell(name), '', '', '', '', '', 'Ikke svart', '', 0, '', '', base.href + '#invitasjon=' + token, ''].join('\t')));
         links.push(names.map(cell).join(' og ') + '\t' + base.href + '#invitasjon=' + token);
       }
       document.querySelector('#invitations').value = invitations.join('\n');

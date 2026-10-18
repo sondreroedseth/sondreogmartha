@@ -63,6 +63,8 @@ I Guests er de ti første kolonnene de du ba om:
 | I | RSVP status – Ikke svart/Svart |
 | J | Last updated – dato og klokkeslett i norsk tid |
 
+Kolonne N inneholder den private invitasjonslenken. Kolonne O, **Drikkepakke**, lagrer «Med alkohol» eller «Uten alkohol». Valget er obligatorisk ved ja til bryllupet og tømmes ved nei. Eksisterende svar har tomt drikkevalg til gjesten svarer på nytt. Ikke flytt disse kolonnene; serveren oppdaterer svarene og bevarer lenken.
+
 Kolonnene K–M er skjulte tekniske felter som hindrer duplikater og overskriving av nyere svar. Ikke rediger dem manuelt. En endring oppdaterer samme gjesterad. Oversikt teller gjester, ikke antall hotellrom. For matbehov: bruk filteret i Guests, velg Wedding = Ja og filtrer Allergies på ikke-tomme verdier.
 
 ## 4. Lag invitasjoner uten personopplysninger i GitHub
@@ -72,7 +74,7 @@ Kolonnene K–M er skjulte tekniske felter som hindrer duplikater og overskrivin
 3. Skriv én invitasjon per linje. Bruk `|` mellom personer som deler invitasjon. Ikke bruk «og» som teknisk skilletegn.
 4. Klikk **Lag invitasjonene**. Verktøyet lager tilfeldige 256-biters tilgangskoder med nettleserens kryptografiske generator, egne invitasjons-ID-er og stabile gjeste-ID-er.
 5. Kopier hele første resultatfelt til første ledige rad i **Invitations**, i kolonne A. Ikke kopier over overskriftene. Resultatet skal fylle tre kolonner.
-6. Kopier hele andre resultatfelt til første ledige rad i **Guests**, i kolonne A. Det skal fylle 13 kolonner; mange felt er tomme før gjesten har svart.
+6. Kopier hele andre resultatfelt til første ledige rad i **Guests**, i kolonne A. Det skal fylle 15 kolonner; mange felt er tomme før gjesten har svart.
 7. **Ta vare på private lenker fra det tredje feltet før du lukker verktøyet.** Lagre dem i et privat dokument utenfor GitHub- og publiseringsmappene. Det finnes ingen automatisk gjenoppretting av tilgangskoden fra kodehashen.
 8. Kontroller at hver invitasjons-ID i Guests også finnes i Invitations, og at Name er korrekt for hver person.
 

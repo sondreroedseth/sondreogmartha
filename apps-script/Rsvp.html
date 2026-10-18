@@ -37,10 +37,10 @@
     }
     function id() { return Array.from(crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, '0')).join(''); }
     function node(tag, text, className) { const n = document.createElement(tag); if (text) n.textContent = text; if (className) n.className = className; return n; }
-    function radio(form, guestId, key, title, value, required = true) {
+    function radio(form, guestId, key, title, value, required = true, options = ['Ja', 'Nei']) {
       const group = node('fieldset'); group.append(node('legend', title));
       const choices = node('div', '', 'choices'); group.append(choices);
-      ['Ja', 'Nei'].forEach(answer => {
+      options.forEach(answer => {
         const label = node('label', '', 'choice');
         const input = document.createElement('input'); input.type = 'radio'; input.name = key; input.value = answer;
         input.required = required; input.checked = value === answer;
@@ -63,6 +63,7 @@
       radio(fields, guest.id, 'wedding', 'Kommer du i bryllupet?', guest.wedding);
       radio(fields, guest.id, 'friday', 'Deltar du på sammenkomsten fredag?', guest.friday);
       const extras = node('div'); fields.append(extras);
+      radio(extras, guest.id, 'drinkPackage', 'Ønsker du drikkepakke med eller uten alkohol?', guest.drinkPackage, true, ['Med alkohol', 'Uten alkohol']);
       const allergyLabel = node('label', 'Allergier eller andre matbehov', 'question'); allergyLabel.htmlFor = guest.id + '-allergies';
       const allergies = document.createElement('textarea'); allergies.id = allergyLabel.htmlFor; allergies.name = 'allergies'; allergies.maxLength = 1000; allergies.value = guest.allergies;
       extras.append(allergyLabel, allergies, node('p', 'Valgfritt. Beskriv bare matbehov som er relevante for serveringen.', 'hint'));
@@ -84,7 +85,7 @@
         event.preventDefault();
         if (fields.disabled || closed || !form.reportValidity()) return;
         const values = new FormData(form);
-        const payload = { guestId: guest.id, revision: guest.revision, wedding: values.get('wedding'), friday: values.get('friday'), allergies: values.get('allergies') || '', accommodation: values.get('accommodation') || '' };
+        const payload = { guestId: guest.id, revision: guest.revision, wedding: values.get('wedding'), friday: values.get('friday'), allergies: values.get('allergies') || '', accommodation: values.get('accommodation') || '', drinkPackage: values.get('drinkPackage') || '' };
         const fingerprint = JSON.stringify(payload);
         const previous = pending.get(guest.id);
         // Identical retries retain the request ID, even after a timed-out response.
@@ -96,6 +97,7 @@
           guest = result.guest; pending.delete(guest.id);
           allergies.value = guest.allergies;
           extras.querySelectorAll('input[name="accommodation"]').forEach(input => { input.checked = input.value === guest.accommodation; });
+          extras.querySelectorAll('input[name="drinkPackage"]').forEach(input => { input.checked = input.value === guest.drinkPackage; });
           saved.textContent = 'Svaret ditt er lagret.';
           setMessage(message, guest.wedding === 'Ja' ? 'Tusen takk for svaret! Vi gleder oss til å feire sammen med deg!' : 'Tusen takk for at du ga beskjed. Vi kommer til å savne deg på den store dagen!', false);
           message.focus({ preventScroll: true });

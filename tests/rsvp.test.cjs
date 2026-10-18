@@ -30,7 +30,19 @@ function backend() {
     ['invite-b', 'guest-b1', 'Testgjest tre', '', '', '', '', '', 'Ikke svart', '', 0, '', '']]);
   return { api: ctx, tables, setTime(value) { now = Date.parse(value); }, setOnLock(fn) { onLock = fn; }, setBusy(value) { busy = value; }, failStorage(value) { fail = value; }, get writes() { return writes; }, get locked() { return locked; } };
 }
-function answer(overrides = {}) { return { guestId: 'guest-a1', revision: 0, requestId: '1'.repeat(32), wedding: 'Ja', friday: 'Ja', allergies: 'Nøtter', accommodation: 'Ja', ...overrides }; }
+function answer(overrides = {}) { return { guestId: 'guest-a1', revision: 0, requestId: '1'.repeat(32), wedding: 'Ja', friday: 'Ja', allergies: 'Nøtter', accommodation: 'Ja', drinkPackage: 'Med alkohol', ...overrides }; }
+
+test('drink packages persist, change and clear without exposing or overwriting invitation links', () => {
+  const b = backend();
+  b.tables.Guests.values[1][13] = 'private-link';
+  assert.equal(b.api.saveGuest(tokenA, answer()).guest.drinkPackage, 'Med alkohol');
+  assert.equal(b.api.saveGuest(tokenA, answer({ revision: 1, requestId: '2'.repeat(32), drinkPackage: 'Uten alkohol' })).guest.drinkPackage, 'Uten alkohol');
+  assert.equal(b.tables.Guests.values[1][13], 'private-link');
+  assert.equal(JSON.stringify(b.api.getInvitation(tokenA)).includes('private-link'), false);
+  const no = b.api.saveGuest(tokenA, answer({ revision: 2, requestId: '3'.repeat(32), wedding: 'Nei' }));
+  assert.equal(no.guest.drinkPackage, '');
+  for (const drinkPackage of ['', 'Annet', null, true]) assert.throws(() => backend().api.saveGuest(tokenA, answer({ drinkPackage })), /drikkepakke/);
+});
 test('one invitation returns exactly its own guests and stable IDs', () => {
   const b = backend(), result = b.api.getInvitation(tokenA);
   assert.equal(result.guests.length, 2);

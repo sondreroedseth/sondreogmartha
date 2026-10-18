@@ -9,7 +9,7 @@ function googleIntegrationChecks_() {
   const guests = table_(book, 'Guests', RSVP.guestHeaders);
   const index = guests.rows.findIndex(row => String(row[0]) === id && String(row[1]) === expectedGuestId && String(row[2]).startsWith('Testgjest RSVP '));
   if (index < 0) throw new Error('Missing fictional fixture. No rows changed.');
-  const original = guests.rows[index].slice(0, 13);
+  const original = Array.from({ length: RSVP.guestHeaders.length }, (_, i) => guests.rows[index][i] ?? '');
   const invitationTable = table_(book, 'Invitations', RSVP.invitationHeaders);
   const invIndex = invitationTable.rows.findIndex(row => String(row[0]) === id);
   const originalActive = invitationTable.rows[invIndex][2];
@@ -21,7 +21,7 @@ function googleIntegrationChecks_() {
   try {
     check(getInvitation(token).guests.length === 2, 'own invitation only');
     rejects(() => getInvitation('f'.repeat(64)), 'unknown token');
-    const payload = { guestId: expectedGuestId, revision: Number(original[10]) || 0, requestId: request(), wedding: 'Ja', friday: 'Ja', accommodation: 'Ja', allergies: 'TEST – fiktivt matbehov' };
+    const payload = { guestId: expectedGuestId, revision: Number(original[10]) || 0, requestId: request(), wedding: 'Ja', friday: 'Ja', accommodation: 'Ja', allergies: 'TEST – fiktivt matbehov', drinkPackage: 'Med alkohol' };
     const first = saveGuest(token, payload);
     check(first.guest.revision === payload.revision + 1 && first.guest.wedding === 'Ja', 'first save');
     const duplicate = saveGuest(token, payload);
@@ -47,7 +47,7 @@ function googleIntegrationChecks_() {
     rejects(() => saveGuest(token, { ...payload, revision: declined.guest.revision, requestId: request() }), 'revoked write');
   } finally {
     Date.now = realNow;
-    guests.sheet.getRange(index + 2, 1, 1, 13).setValues([original]);
+    guests.sheet.getRange(index + 2, 1, 1, original.length).setValues([original]);
     invitationTable.sheet.getRange(invIndex + 2, 3).setValue(originalActive);
     SpreadsheetApp.flush();
   }

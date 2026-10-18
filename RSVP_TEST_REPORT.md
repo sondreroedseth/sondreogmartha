@@ -1,5 +1,9 @@
 # RSVP – testrapport
 
+## Tillegg: drikkepakke
+
+Drikkepakke er lagt til som individuelt, obligatorisk valg ved ja til bryllupet: «Med alkohol» eller «Uten alkohol». Kolonne O i Guests lagrer valget; kolonne N med private invitasjonslenker bevares og eksponeres ikke i gjesteprofilen. Apps Script er oppdatert til versjon 3 på samme adresse. **19 automatiske tester består**, inkludert lagring, endring, tømming ved nei og ugyldige drikkevalg. Faktisk innsending fra marthaogsondre.no med «Uten alkohol» er lest tilbake i Sheets med oppdatert revisjon og uendret invitasjonslenke. Ingen ekte gjesters svar ble endret.
+
 Dato: 18. oktober 2026. Privat Google-ark er opprettet og Apps Script er distribuert som versjon 2 etter godkjenning. Nettsiden er fortsatt deaktivert i konfigurasjonen, og ingen GitHub-push eller publisering av nettsiden er utført.
 
 Senere samme dag godkjente eieren publisering for testing på domenet. Konfigurasjonen er aktivert, de nyeste endringene fra origin/main er bevart, og de 18 automatiske testene består også med produksjonskonfigurasjonen. Den siste kontrollen av publisert domene skal dokumenteres etter distribusjon.
