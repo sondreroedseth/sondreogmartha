@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="no">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'">
+<title>Lag private invitasjonslenker</title>
+<style>body{max-width:850px;margin:40px auto;padding:0 22px;background:#fff7f0;color:#655c51;font:18px/1.6 Georgia,serif}h1,h2{color:#667052;font-weight:400}label{display:block;margin-top:20px}input,textarea,button{font:inherit;padding:12px;box-sizing:border-box}input,textarea{width:100%;border:1px solid #d9bca5;background:#fffaf5}textarea{min-height:150px}button{background:#667052;color:white;border:0;cursor:pointer;margin:16px 0}p{overflow-wrap:anywhere}[hidden]{display:none}pre{white-space:pre-wrap}small{display:block}a{color:inherit}</style>
+<h1>Lag private invitasjonslenker</h1>
+<p>Åpne denne filen lokalt på datamaskinen. Navn og koder behandles bare i nettleseren; ingen data sendes til en server. Verktøyet lager nye ID-er hver gang. Bruk det kun for nye invitasjoner, og ta vare på resultatet før du lukker siden.</p>
+<label for="base">Adressen til invitasjonssiden</label><input id="base" value="https://marthaogsondre.no/invitasjon.html" type="url">
+<label for="names">Én invitasjon per linje. Skill gjester på samme invitasjon med |</label>
+<textarea id="names" spellcheck="false" placeholder="Første gjest | Andre gjest&#10;En annen gjest"></textarea>
+<small>Bruk de faktiske navnene. Skrivemåten beholdes; navn blir ikke tolket eller delt automatisk.</small>
+<button id="generate">Lag invitasjonene</button><p id="status" role="status"></p>
+<div id="output" hidden>
+<h2>1. Invitasjonsregister</h2><p>Kopier inn i <strong>Invitations</strong>, fra første tomme rad under overskriften. Kolonnene er Invitation ID, Code hash, Active.</p><textarea id="invitations" readonly aria-label="Rader til Invitations"></textarea>
+<h2>2. Gjester</h2><p>Kopier inn i <strong>Guests</strong>, fra første tomme rad under overskriften. Alle 13 kolonner må følge med.</p><textarea id="guests" readonly aria-label="Rader til Guests"></textarea>
+<h2>3. Private lenker</h2><p>Lagre disse privat før du lukker siden. Send hver lenke kun til personene på den invitasjonen. Lenken gir tilgang til alle svar og matbehov innen den invitasjonen. Ikke legg resultatene i GitHub eller publiseringsmappen.</p><textarea id="links" readonly aria-label="Private invitasjonslenker"></textarea>
+<p>For å trekke tilbake en lenke: sett Active til FALSE i Invitations. For å bytte en kode uten å miste svar: behold Invitation ID og Guest ID, og bytt bare kodehashen. Se RSVP_SETUP.md.</p>
+</div>
+<script>
+(() => {
+  const hex = bytes => Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+  const cell = value => /^[\s]*[=+@-]/.test(value) ? "'" + value : value;
+  document.querySelector('#generate').addEventListener('click', async () => {
+    const status = document.querySelector('#status');
+    if (!document.querySelector('#output').hidden && !confirm('Lage nye ID-er og koder? Dette erstatter resultatet i vinduet. Eksisterende svar i Google Sheets må ikke erstattes.')) return;
+    try {
+      const base = new URL(document.querySelector('#base').value);
+      if (base.protocol !== 'https:' || base.username || base.password) throw new Error('Bruk en HTTPS-adresse uten brukernavn og passord.');
+      base.search = ''; base.hash = '';
+      const lines = document.querySelector('#names').value.trim().split(/\r?\n/).filter(line => line.trim());
+      if (!lines.length || lines.length > 1000) throw new Error('Skriv mellom 1 og 1000 invitasjoner.');
+      const invitations = [], guests = [], links = [];
+      for (const line of lines) {
+        const names = line.split('|').map(n => n.trim());
+        if (names.some(n => !n || n.length > 120 || /[\t\r\n\x00-\x1f]/.test(n))) throw new Error('Hvert navn må inneholde 1–120 tegn uten tabulator eller kontrolltegn.');
+        const invitationId = crypto.randomUUID(), token = hex(crypto.getRandomValues(new Uint8Array(32)));
+        const hash = hex(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))));
+        invitations.push([invitationId, hash, 'TRUE'].join('\t'));
+        names.forEach(name => guests.push([invitationId, crypto.randomUUID(), cell(name), '', '', '', '', '', 'Ikke svart', '', 0, '', ''].join('\t')));
+        links.push(names.map(cell).join(' og ') + '\t' + base.href + '#invitasjon=' + token);
+      }
+      document.querySelector('#invitations').value = invitations.join('\n');
+      document.querySelector('#guests').value = guests.join('\n');
+      document.querySelector('#links').value = links.join('\n');
+      document.querySelector('#output').hidden = false;
+      status.textContent = invitations.length + ' invitasjoner og ' + guests.length + ' gjester er klare. Lagre lenkene privat.';
+    } catch (error) { status.textContent = error.message; }
+  });
+})();
+</script>
+</html>

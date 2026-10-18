@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#f4e5e2">
   <title>Invitasjon — Martha &amp; Sondre</title>
   <meta name="description" content="Personlig invitasjon til bryllupet til Martha og Sondre, 17. juli 2027.">
@@ -143,18 +144,22 @@
     <footer class="invitation-footer">MARTHA &amp; SONDRE · 17. JULI 2027</footer>
   </main>
   <noscript><div class="no-script"><p>Aktiver JavaScript for å åpne den personlige invitasjonen.</p><a href="https://marthaogsondre.no">Besøk bryllupsnettsiden</a></div></noscript>
+  <iframe id="invitation-profile" title="Henter personlig invitasjon" referrerpolicy="no-referrer" hidden></iframe>
+  <script src="rsvp-config.js"></script>
+  <script src="rsvp-bridge.js"></script>
   <script>
     const cover = document.querySelector('#cover');
     const invitation = document.querySelector('#invitation');
     const sealButton = document.querySelector('#openInvitation');
     const openText = document.querySelector('#openText');
     const guestParam = new URLSearchParams(location.search).get('gjest');
-    const guest = (guestParam || '').trim();
+    let guest = (guestParam || '').trim();
     let busy = false;
     let opened = false;
 
-    if (guest) {
-      const multipleGuests = /\s+og\s+|&/i.test(guest);
+    function personalizeGuest(names) {
+      guest = names.join(' og ');
+      const multipleGuests = names.length > 1 || /\s+og\s+|&/i.test(guest);
       const subject = multipleGuests ? 'dere' : 'du';
       const object = multipleGuests ? 'dere' : 'deg';
       document.querySelector('#guestCover').textContent = guest.replace(/\s+og\s+/i, ' & ');
@@ -163,12 +168,34 @@
       document.querySelector('#guestMessage').textContent = 'Det vil bety svært mye for oss å ha ' + object + ' til stede når vi gir hverandre vårt ja. Vi gleder oss til en uforglemmelig dag sammen med ' + object + '. Besøk bryllupsnettsiden vår via lenken nedenfor, og gi beskjed i svarskjemaet om ' + subject + ' kommer.';
       document.title = 'Invitasjon til ' + guest + ' — Martha & Sondre';
       const siteUrl = new URL(document.querySelector('#mainSiteLink').href);
-      siteUrl.searchParams.set('gjest', guest);
+      if (window.RsvpBridge.hasToken) {
+        siteUrl.searchParams.delete('gjest');
+        siteUrl.hash = window.RsvpBridge.tokenFragment;
+      } else siteUrl.searchParams.set('gjest', guest);
       document.querySelector('#mainSiteLink').href = siteUrl.href;
       sealButton.disabled = false;
       openText.disabled = false;
       openText.textContent = 'Trykk på seglet for å åpne';
     }
+
+    if (window.RsvpBridge.hasToken) {
+      // A secure link always takes precedence over an untrusted name parameter.
+      guest = '';
+      document.querySelector('#guestCover').textContent = 'Henter invitasjonen …';
+      openText.textContent = 'Et lite øyeblikk';
+      if (window.RsvpBridge.available) {
+        window.RsvpBridge.connect(document.querySelector('#invitation-profile'), 'profile', {
+          profile: personalizeGuest,
+          error(message) {
+            document.querySelector('#guestCover').textContent = 'Kunne ikke hente invitasjonen';
+            openText.textContent = message;
+          }
+        });
+      } else {
+        document.querySelector('#guestCover').textContent = 'Invitasjonen er ikke aktivert ennå';
+        openText.textContent = 'Prøv igjen senere eller kontakt oss';
+      }
+    } else if (guest) personalizeGuest([guest]);
 
     async function openInvite() {
       if (!guest || busy || opened) return;

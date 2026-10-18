@@ -1,0 +1,10 @@
+const fs=require('node:fs');
+const path=require('node:path');
+const {randomBytes,randomUUID,createHash}=require('node:crypto');
+const file=path.resolve(__dirname,'../private-rsvp/live-test.private.json');
+if(fs.existsSync(file)) throw new Error('Private fixture already exists; reuse it rather than regenerating IDs.');
+const invitations=[0,1].map(()=>({id:randomUUID(),token:randomBytes(32).toString('hex')}));
+const guests=[0,1,2].map((n)=>({invitationId:invitations[n===2?1:0].id,id:randomUUID(),name:'Testgjest RSVP '+(n+1)}));
+const rows={invitations:invitations.map(i=>[i.id,createHash('sha256').update(i.token).digest('hex'),true]),guests:guests.map(g=>[g.invitationId,g.id,g.name,'','','','','','Ikke svart','',0,'',''])};
+fs.writeFileSync(file,JSON.stringify({invitations,guests,rows},null,2));
+console.log(JSON.stringify(rows));

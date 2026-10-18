@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="no-referrer" />
+  <script src="rsvp-config.js" defer></script>
+  <script src="rsvp-bridge.js" defer></script>
+  <script src="rsvp.js" defer></script>
 
   <title> Martha & Sondre | Bryllup</title>
 
@@ -92,6 +96,9 @@ summary { font-size: 23px; color: var(--accent-dark); cursor: pointer; }
 details p { margin: 12px 0 0; color: var(--muted); }
 .rsvp { position: relative; background: var(--soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .rsvp-box { max-width: 560px; margin: 32px auto 0; padding: 28px; text-align: center; background: #fffaf580; border: 1px solid var(--line); border-radius: 2px; }
+.rsvp-integrated { max-width: 660px; margin: 32px auto 0; }
+.rsvp-frame { display: block; width: 100%; height: 220px; border: 0; background: transparent; }
+[hidden] { display: none !important; }
 .submit { width: 100%; margin-top: 4px; }
 .note { margin-top: 18px; margin-bottom: 0; font-size: 17px; color: var(--muted); text-align: center; }
 #taler a, details a { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 4px; overflow-wrap: anywhere; }
@@ -454,7 +461,12 @@ footer p { position: relative; margin: 4px 0; font-size: 18px; }
           Gi oss beskjed innen 3. januar 2027.
         </p>
 
-        <div class="rsvp-box">
+        <div class="rsvp-integrated" id="rsvp-integrated" hidden>
+          <p class="note" id="rsvp-loading" role="status">Henter invitasjonen din …</p>
+          <iframe id="rsvp-frame" class="rsvp-frame" title="Personlig svarskjema til bryllupet" referrerpolicy="no-referrer" hidden></iframe>
+        </div>
+
+        <div class="rsvp-box" id="rsvp-legacy">
           <a
             class="btn primary submit"
             href="https://docs.google.com/forms/d/e/1FAIpQLSdBeFsUgMu2QFkuO_EHi-DX7CW2iUi5kAuqHEokO210ag8jFw/viewform?usp=dialog"

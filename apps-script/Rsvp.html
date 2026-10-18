@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:light;--paper:#fffaf5;--text:#655c51;--muted:#847568;--green:#667052;--gold:#af9160;--line:#d9bca580}
+    *{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;padding:6px;background:transparent;color:var(--text);font:20px/1.5 'Cormorant Garamond',Georgia,serif}p{margin:0 0 18px}h2{font-size:32px;line-height:1.2;font-weight:400;margin:0 0 7px;color:var(--green)}button,input,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:wait;opacity:.6}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+    .guest{padding:27px;background:var(--paper);border:1px solid var(--line);margin:0 0 22px;animation:appear .35s ease-out}.saved{color:var(--muted);font-size:17px;margin:0 0 20px}.question{display:block;margin:22px 0 8px;font-size:21px}fieldset{border:0;padding:0;margin:22px 0 0;min-width:0}legend{padding:0;margin-bottom:8px}.choices{display:flex;flex-wrap:wrap;gap:10px}.choice{display:flex;align-items:center;gap:10px;min-height:48px;padding:9px 18px;border:1px solid var(--line);cursor:pointer}.choice:has(input:checked){border-color:var(--green);background:#e9eddf}.choice input{accent-color:var(--green);width:18px;height:18px;margin:0}textarea{display:block;width:100%;resize:vertical;min-height:100px;padding:12px;border:1px solid var(--line);background:#fff;color:var(--text)}.hint{font-size:17px;color:var(--muted);margin:8px 0 0}.primary,.secondary{border:1px solid var(--green);padding:12px 20px;min-height:48px;border-radius:2px;line-height:1.3}.primary{background:var(--green);color:var(--paper);width:100%;margin-top:24px}.primary:hover{background:#566143}.secondary{background:transparent;color:var(--green);margin-top:12px}.message{padding:15px 18px;margin:18px 0 0;border-left:3px solid var(--green);background:#e9eddf}.error{border-color:#974f40;background:#fbebe5}.closed{padding:20px;background:var(--paper);border:1px solid var(--line)}.privacy{font-size:17px;color:var(--muted);padding:0 8px;text-align:center}.notice{padding:20px;background:var(--paper)}@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}@media(max-width:480px){.guest{padding:20px 17px}body{padding:2px;font-size:19px}.choice{flex:1}h2{font-size:29px}}@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+  </style>
+</head>
+<body>
+  <p id="loading" class="notice" role="status">Henter invitasjonen din …</p>
+  <div id="content" hidden>
+    <p id="closed" class="closed" hidden>Svarfristen 3. januar 2027 er passert. Du kan se tidligere svar nedenfor. Kontakt oss hvis noe har endret seg.</p>
+    <div id="guests"></div>
+    <p class="privacy">Svarene er bare tilgjengelige for dere som deler invitasjonen, og for brudeparet. Oppgi kun matbehov vi trenger for å planlegge måltidet. Ønske om overnatting er ikke en bekreftet hotellbestilling.</p>
+  </div>
+  <script>
+  (() => {
+    'use strict';
+    const boot = <?!= bootstrap ?>;
+    const loading = document.querySelector('#loading');
+    let token = '', initialized = false, closed = false, inFlight = 0;
+    const pending = new Map();
+    function send(type, extra = {}) { window.top.postMessage({ app: 'wedding-rsvp', channel: boot.channel, type, ...extra }, boot.parent); }
+    function rpc(name, ...args) {
+      return new Promise((resolve, reject) => {
+        let settled = false;
+        const timer = setTimeout(() => { settled = true; reject(new Error('Vi fikk ikke bekreftet lagringen. Prøv igjen med samme svar, eller hent siste svar for å kontrollere.')); }, 30000);
+        const runner = google.script.run.withSuccessHandler(result => { if (!settled) { clearTimeout(timer); settled = true; resolve(result); } })
+          .withFailureHandler(error => { if (!settled) { clearTimeout(timer); settled = true; reject(new Error(error.message || 'Noe gikk galt. Prøv igjen.')); } });
+        runner[name](...args);
+      });
+    }
+    function id() { return Array.from(crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, '0')).join(''); }
+    function node(tag, text, className) { const n = document.createElement(tag); if (text) n.textContent = text; if (className) n.className = className; return n; }
+    function radio(form, guestId, key, title, value, required = true) {
+      const group = node('fieldset'); group.append(node('legend', title));
+      const choices = node('div', '', 'choices'); group.append(choices);
+      ['Ja', 'Nei'].forEach(answer => {
+        const label = node('label', '', 'choice');
+        const input = document.createElement('input'); input.type = 'radio'; input.name = key; input.value = answer;
+        input.required = required; input.checked = value === answer;
+        input.id = guestId + '-' + key + '-' + answer;
+        label.append(input, document.createTextNode(answer)); choices.append(label);
+      });
+      form.append(group); return group;
+    }
+    function setMessage(el, text, error) {
+      el.textContent = text; el.className = 'message' + (error ? ' error' : ''); el.hidden = false;
+      el.setAttribute('role', error ? 'alert' : 'status');
+    }
+    function guestForm(initial) {
+      let guest = initial;
+      const card = node('article', '', 'guest'), heading = node('h2', guest.name);
+      const saved = node('p', guest.status === 'Svart' ? 'Tidligere svar er hentet. Du kan endre dem frem til 3. januar 2027.' : 'Vi vil gjerne høre om du kommer.', 'saved');
+      card.append(heading, saved);
+      const form = document.createElement('form'); form.autocomplete = 'off'; card.append(form);
+      const fields = node('fieldset'); fields.setAttribute('aria-label', 'Svar for ' + guest.name); form.append(fields);
+      radio(fields, guest.id, 'wedding', 'Kommer du i bryllupet?', guest.wedding);
+      radio(fields, guest.id, 'friday', 'Deltar du på sammenkomsten fredag?', guest.friday);
+      const extras = node('div'); fields.append(extras);
+      const allergyLabel = node('label', 'Allergier eller andre matbehov', 'question'); allergyLabel.htmlFor = guest.id + '-allergies';
+      const allergies = document.createElement('textarea'); allergies.id = allergyLabel.htmlFor; allergies.name = 'allergies'; allergies.maxLength = 1000; allergies.value = guest.allergies;
+      extras.append(allergyLabel, allergies, node('p', 'Valgfritt. Beskriv bare matbehov som er relevante for serveringen.', 'hint'));
+      radio(extras, guest.id, 'accommodation', 'Ønsker du overnatting på Lysebu?', guest.accommodation);
+      const submit = node('button', guest.status === 'Svart' ? 'Lagre endringer' : 'Send svar', 'primary'); submit.type = 'submit'; fields.append(submit);
+      const message = node('p', '', 'message'); message.hidden = true; message.tabIndex = -1; card.append(message);
+      const reload = node('button', 'Hent siste lagrede svar', 'secondary'); reload.type = 'button'; card.append(reload);
+      const sync = () => {
+        const attending = form.elements.wedding.value === 'Ja'; extras.hidden = !attending;
+        extras.querySelectorAll('input,textarea').forEach(input => { input.disabled = !attending; });
+        fields.disabled = closed;
+      };
+      form.addEventListener('change', sync); sync();
+      form.addEventListener('input', () => {
+        saved.textContent = 'Endringene dine er ikke lagret ennå.';
+        message.hidden = true;
+      });
+      form.addEventListener('submit', async event => {
+        event.preventDefault();
+        if (fields.disabled || closed || !form.reportValidity()) return;
+        const values = new FormData(form);
+        const payload = { guestId: guest.id, revision: guest.revision, wedding: values.get('wedding'), friday: values.get('friday'), allergies: values.get('allergies') || '', accommodation: values.get('accommodation') || '' };
+        const fingerprint = JSON.stringify(payload);
+        const previous = pending.get(guest.id);
+        // Identical retries retain the request ID, even after a timed-out response.
+        const requestId = previous?.fingerprint === fingerprint ? previous.id : id();
+        pending.set(guest.id, { fingerprint, id: requestId });
+        inFlight++; fields.disabled = true; reload.disabled = true; submit.textContent = 'Lagrer …'; message.hidden = true;
+        try {
+          const result = await rpc('saveGuest', token, { ...payload, requestId });
+          guest = result.guest; pending.delete(guest.id);
+          allergies.value = guest.allergies;
+          extras.querySelectorAll('input[name="accommodation"]').forEach(input => { input.checked = input.value === guest.accommodation; });
+          saved.textContent = 'Svaret ditt er lagret.';
+          setMessage(message, guest.wedding === 'Ja' ? 'Tusen takk for svaret! Vi gleder oss til å feire sammen med deg!' : 'Tusen takk for at du ga beskjed. Vi kommer til å savne deg på den store dagen!', false);
+          message.focus({ preventScroll: true });
+        } catch (error) { setMessage(message, error.message, true); }
+        finally { inFlight--; sync(); reload.disabled = false; submit.textContent = guest.status === 'Svart' ? 'Lagre endringer' : 'Send svar'; }
+      });
+      reload.addEventListener('click', async () => {
+        if (inFlight) { setMessage(message, 'Vent til innsendingen er ferdig før du henter svarene på nytt.', true); return; }
+        if (!confirm('Hente siste lagrede svar? Eventuelle endringer som ikke er sendt inn, blir erstattet.')) return;
+        reload.disabled = true;
+        try { await load(); } catch (error) { setMessage(message, error.message, true); reload.disabled = false; }
+      });
+      return card;
+    }
+    async function load() {
+      const data = await rpc('getInvitation', token);
+      send('profile', { names: data.guests.map(guest => guest.name) });
+      loading.hidden = true;
+      if (boot.mode === 'profile') return;
+      closed = data.closed;
+      document.querySelector('#closed').hidden = !closed;
+      document.querySelector('#guests').replaceChildren(...data.guests.map(guestForm));
+      document.querySelector('#content').hidden = false;
+    }
+    window.addEventListener('message', async event => {
+      const data = event.data;
+      if (initialized || event.origin !== boot.parent || event.source !== window.top || !data || data.app !== 'wedding-rsvp' || data.channel !== boot.channel || data.type !== 'authorize' || !/^[a-f0-9]{64}$/.test(data.token || '')) return;
+      initialized = true; clearInterval(hello); clearTimeout(handshakeTimeout); token = data.token;
+      try { await load(); }
+      catch { loading.hidden = false; loading.textContent = 'Invitasjonen kunne ikke hentes. Kontroller den personlige lenken, eller last siden på nytt og prøv igjen.'; send('error'); }
+    });
+    // Nothing private loads before an allowed top-level website has authenticated.
+    const hello = setInterval(() => send('hello'), 700);
+    const handshakeTimeout = setTimeout(() => { clearInterval(hello); loading.textContent = 'Åpne skjemaet via den personlige invitasjonslenken på marthaogsondre.no.'; }, 30000);
+    send('hello');
+    let lastHeight = 0;
+    new ResizeObserver(() => {
+      const height = document.body.scrollHeight;
+      if (height !== lastHeight) { lastHeight = height; send('height', { height }); }
+    }).observe(document.body);
+  })();
+  </script>
+</body>
+</html>

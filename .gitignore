@@ -1,1 +1,6 @@
 .vercel
+
+# Private guest exports and personal invitation links must never be committed.
+private-rsvp/
+*.private.tsv
+*.private.json
