@@ -7,7 +7,8 @@
   box.hidden = false;
   const status = document.querySelector('#rsvp-loading');
   if (!bridge.hasToken) {
-    status.textContent = 'Åpne den personlige invitasjonslenken for å hente navn og tidligere svar. Kontakt oss hvis du trenger en ny lenke.';
+    status.textContent = 'For å svare på bryllupsinvitasjonen må du bruke den private invitasjonslenken du har mottatt. Ta kontakt med oss hvis du trenger å få lenken tilsendt på nytt.';
+    fallback.hidden = true;
     return;
   }
   const frame = document.querySelector('#rsvp-frame');
