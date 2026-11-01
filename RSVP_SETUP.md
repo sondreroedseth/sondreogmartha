@@ -4,11 +4,13 @@ Denne veiledningen kobler det nye svarskjemaet til et privat Google-regneark. Du
 
 ## Status og avgrensning
 
-Det private RSVP-arket er opprettet på Google-kontoen. Tilgang er godkjent, og tilknyttet Apps Script er publisert som versjon 2. Faktisk lagring, gjenhenting, endring og sikkerhetskontroller er testet med tre fiktive gjester. Testgjestene og deres tilgang er fjernet. Se RSVP_TEST_REPORT.md for resultater og gjenstående kontroller. Lokale koblingsopplysninger finnes i den Git-ignorerte filen `private-rsvp/cloud-setup.private.json`.
+Det private RSVP-arket er opprettet på Google-kontoen. Tilgang er godkjent, og tilknyttet Apps Script er oppdatert til versjon 4 den 1. november 2026. Faktisk lagring, gjenhenting, endring og sikkerhetskontroller er testet med tre fiktive gjester. Testgjestene og deres tilgang er fjernet. Se RSVP_TEST_REPORT.md for resultater og gjenstående kontroller. Lokale koblingsopplysninger finnes i den Git-ignorerte filen `private-rsvp/cloud-setup.private.json`.
 
 Publisering er godkjent 18. oktober 2026. `rsvp-config.js` har `enabled: true`, og `endpoint` er fylt ut med den publiserte backend-adressen. Google Forms-knappen beholdes som reserve for besøk uten personlig kode eller ved feil. Gjennomfør den siste kontrollen på domenet etter publisering før lenkene sendes ut. Steg 1–4 nedenfor forklarer også hvordan oppsettet kan gjenskapes; ikke opprett et ekstra ark eller skript bare fordi du følger veiledningen.
 
 Romtypevalg er utelatt etter ønske i første runde. Spørsmålet om ønske om overnatting er med. `Room type` beholdes som tom kolonne for eventuell senere utvidelse. Ingen ytterligere spørsmål fra det gamle Google-skjemaet er importert; innholdet der kunne ikke hentes under arbeidet.
+
+Oppdatert 1. november 2026: Ved ja til hotell er «Fredag til søndag» eller «Lørdag til søndag» obligatorisk. Perioden lagres i kolonne P, `Opphold`, og tømmes ved nei til hotell eller bryllupet. Eksisterende svar får ikke automatisk valgt periode. Både skjemautforming og lagring er publisert i Apps Script-versjon 4 på samme nettappadresse og med samme tilgang som tidligere. Google-arket er klargjort med overskrift og validering i P2:P1001, uten å endre eksisterende svar. Kolonne H beholdes uendret. Ved et nytt oppsett legger setup_ til den nye kolonnen.
 
 Bruk filene i **github-repository**, som er GitHub-arbeidsmappen. Mappen **github-publisering** er en eldre kopi og er ikke oppdatert med denne løsningen.
 
@@ -84,7 +86,7 @@ Lenken vil ha formen `https://marthaogsondre.no/invitasjon.html#invitasjon=<tilf
 
 ## 5. Publiser Apps Script – etter godkjenning
 
-Dette er et eget publiseringstrinn. Ingen slik publisering er gjort av Codex.
+Dette er et eget publiseringstrinn. Eksisterende implementering er oppdatert til versjon 4 den 1. november 2026. Ved senere oppdateringer velger du «Administrer implementeringer», redigerer eksisterende nettapp og velger «Ny versjon», slik at nettadressen beholdes.
 
 1. I Apps Script: velg **Distribuer / Deploy → Ny distribusjon / New deployment**.
 2. Velg type **Nettapp / Web app**.

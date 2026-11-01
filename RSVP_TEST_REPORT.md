@@ -89,3 +89,12 @@ Testfunksjon og midlertidig lokaladresse er fjernet fra Google-koden. Versjon 2 
 - Avklar eventuelle tidligere Google Forms-svar ved overgang; de er ikke importert.
 
 Følg RSVP_SETUP.md før `enabled` settes til true på den publiserte nettsiden. Google Forms beholdes frem til overgangen er godkjent.
+
+
+## Oppdatering 1. november 2026
+
+- Nytt obligatorisk hotellperiodevalg ved ja til overnatting; skjules ved nei.
+- Lagring, gjenhenting, endring og tømming av perioden er kontrollert i lokale tester. Alle 20 tester består.
+- Apps Script-versjon 4 er publisert på eksisterende nettappadresse med uendret tilgang. Lagret kode er sammenlignet med lokale filer.
+- Guests!P1 er Opphold; P2:P1001 har de to tillatte periodene. Ingen eksisterende gjestesvar er endret.
+- Nettsiden får program for fredag, lørdag og søndag, oppdatert overnattingstekst og toastmastermogs@gmail.com. Eksisterende CSS er bevart. Lokale testkoblinger er ikke med i publiseringsfilene.

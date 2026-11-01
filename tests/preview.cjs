@@ -6,7 +6,7 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const origin = 'http://127.0.0.1:8765';
 const token = 'a'.repeat(64);
-let guests = [1, 2].map(n => ({ id: 'demo-' + n, name: 'Testgjest ' + n, wedding: '', friday: '', allergies: '', accommodation: '', status: 'Ikke svart', revision: 0 }));
+let guests = [1, 2].map(n => ({ id: 'demo-' + n, name: 'Testgjest ' + n, wedding: '', friday: '', allergies: '', accommodation: '', stayPeriod: '', status: 'Ikke svart', revision: 0 }));
 let failNext = false;
 function mockScript() {
   return `<script>window.google={script:{run:{withSuccessHandler(success){return {withFailureHandler(failure){return new Proxy({}, {get(_target,name){return (...args)=>fetch('/mock-rpc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,args})}).then(r=>r.json()).then(r=>r.error?failure({message:r.error}):success(r.result)).catch(()=>failure({message:'Nettverksfeil'}));}})}}}}}};</script>`;
@@ -26,7 +26,7 @@ http.createServer(async (req, res) => {
         const input = args[1], guest = guests.find(g => g.id === input.guestId);
         if (!guest) throw new Error('Ugyldig gjest.');
         if (guest.revision !== input.revision) throw new Error('Svaret er endret i et annet vindu.');
-        Object.assign(guest, input, { revision: guest.revision + 1, status: 'Svart', allergies: input.wedding === 'Ja' ? input.allergies : '', accommodation: input.wedding === 'Ja' ? input.accommodation : '', drinkPackage: input.wedding === 'Ja' ? input.drinkPackage : '' });
+        Object.assign(guest, input, { revision: guest.revision + 1, status: 'Svart', allergies: input.wedding === 'Ja' ? input.allergies : '', accommodation: input.wedding === 'Ja' ? input.accommodation : '', stayPeriod: input.wedding === 'Ja' && input.accommodation === 'Ja' ? input.stayPeriod : '', drinkPackage: input.wedding === 'Ja' ? input.drinkPackage : '' });
         result = { guest, duplicate: false };
       } else throw new Error('Ukjent kall.');
       res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify({ result }));

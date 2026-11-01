@@ -30,7 +30,25 @@ function backend() {
     ['invite-b', 'guest-b1', 'Testgjest tre', '', '', '', '', '', 'Ikke svart', '', 0, '', '']]);
   return { api: ctx, tables, setTime(value) { now = Date.parse(value); }, setOnLock(fn) { onLock = fn; }, setBusy(value) { busy = value; }, failStorage(value) { fail = value; }, get writes() { return writes; }, get locked() { return locked; } };
 }
-function answer(overrides = {}) { return { guestId: 'guest-a1', revision: 0, requestId: '1'.repeat(32), wedding: 'Ja', friday: 'Ja', allergies: 'Nøtter', accommodation: 'Ja', drinkPackage: 'Med alkohol', ...overrides }; }
+function answer(overrides = {}) { return { guestId: 'guest-a1', revision: 0, requestId: '1'.repeat(32), wedding: 'Ja', friday: 'Ja', allergies: 'Nøtter', accommodation: 'Ja', stayPeriod: 'Fredag til søndag', drinkPackage: 'Med alkohol', ...overrides }; }
+
+test('hotel dates are required, persist on reload, change and clear when declining', () => {
+  for (const stayPeriod of ['', undefined, null, 'Fredag', true]) {
+    const b = backend();
+    assert.throws(() => b.api.saveGuest(tokenA, answer({ stayPeriod })), /Velg om du ønsker rom/);
+    assert.equal(b.writes, 0);
+  }
+  const b = backend();
+  b.api.saveGuest(tokenA, answer());
+  assert.equal(b.api.getInvitation(tokenA).guests[0].stayPeriod, 'Fredag til søndag');
+  b.api.saveGuest(tokenA, answer({ revision: 1, requestId: '2'.repeat(32), stayPeriod: 'Lørdag til søndag' }));
+  assert.equal(b.tables.Guests.values[1][15], 'Lørdag til søndag');
+  const noHotel = b.api.saveGuest(tokenA, answer({ revision: 2, requestId: '3'.repeat(32), accommodation: 'Nei' }));
+  assert.equal(noHotel.guest.stayPeriod, '');
+  b.api.saveGuest(tokenA, answer({ revision: 3, requestId: '4'.repeat(32) }));
+  const noWedding = b.api.saveGuest(tokenA, answer({ revision: 4, requestId: '5'.repeat(32), wedding: 'Nei' }));
+  assert.equal(noWedding.guest.stayPeriod, '');
+});
 
 test('drink packages persist, change and clear without exposing or overwriting invitation links', () => {
   const b = backend();

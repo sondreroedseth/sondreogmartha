@@ -21,7 +21,7 @@ function googleIntegrationChecks_() {
   try {
     check(getInvitation(token).guests.length === 2, 'own invitation only');
     rejects(() => getInvitation('f'.repeat(64)), 'unknown token');
-    const payload = { guestId: expectedGuestId, revision: Number(original[10]) || 0, requestId: request(), wedding: 'Ja', friday: 'Ja', accommodation: 'Ja', allergies: 'TEST – fiktivt matbehov', drinkPackage: 'Med alkohol' };
+    const payload = { guestId: expectedGuestId, revision: Number(original[10]) || 0, requestId: request(), wedding: 'Ja', friday: 'Ja', accommodation: 'Ja', stayPeriod: 'Fredag til søndag', allergies: 'TEST – fiktivt matbehov', drinkPackage: 'Med alkohol' };
     const first = saveGuest(token, payload);
     check(first.guest.revision === payload.revision + 1 && first.guest.wedding === 'Ja', 'first save');
     const duplicate = saveGuest(token, payload);

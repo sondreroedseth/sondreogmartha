@@ -68,12 +68,16 @@
       const allergies = document.createElement('textarea'); allergies.id = allergyLabel.htmlFor; allergies.name = 'allergies'; allergies.maxLength = 1000; allergies.value = guest.allergies;
       extras.append(allergyLabel, allergies, node('p', 'Valgfritt. Beskriv bare matbehov som er relevante for serveringen.', 'hint'));
       radio(extras, guest.id, 'accommodation', 'Ønsker du overnatting på Lysebu?', guest.accommodation);
+      const stay = radio(extras, guest.id, 'stayPeriod', 'Når ønsker du å bo på hotellet?', guest.stayPeriod, true, ['Fredag til søndag', 'Lørdag til søndag']);
       const submit = node('button', guest.status === 'Svart' ? 'Lagre endringer' : 'Send svar', 'primary'); submit.type = 'submit'; fields.append(submit);
       const message = node('p', '', 'message'); message.hidden = true; message.tabIndex = -1; card.append(message);
       const reload = node('button', 'Hent siste lagrede svar', 'secondary'); reload.type = 'button'; card.append(reload);
       const sync = () => {
         const attending = form.elements.wedding.value === 'Ja'; extras.hidden = !attending;
         extras.querySelectorAll('input,textarea').forEach(input => { input.disabled = !attending; });
+        const staying = attending && form.elements.accommodation.value === 'Ja';
+        stay.hidden = !staying;
+        stay.querySelectorAll('input').forEach(input => { input.disabled = !staying; });
         fields.disabled = closed;
       };
       form.addEventListener('change', sync); sync();
@@ -85,7 +89,7 @@
         event.preventDefault();
         if (fields.disabled || closed || !form.reportValidity()) return;
         const values = new FormData(form);
-        const payload = { guestId: guest.id, revision: guest.revision, wedding: values.get('wedding'), friday: values.get('friday'), allergies: values.get('allergies') || '', accommodation: values.get('accommodation') || '', drinkPackage: values.get('drinkPackage') || '' };
+        const payload = { guestId: guest.id, revision: guest.revision, wedding: values.get('wedding'), friday: values.get('friday'), allergies: values.get('allergies') || '', accommodation: values.get('accommodation') || '', stayPeriod: values.get('stayPeriod') || '', drinkPackage: values.get('drinkPackage') || '' };
         const fingerprint = JSON.stringify(payload);
         const previous = pending.get(guest.id);
         // Identical retries retain the request ID, even after a timed-out response.
@@ -97,6 +101,7 @@
           guest = result.guest; pending.delete(guest.id);
           allergies.value = guest.allergies;
           extras.querySelectorAll('input[name="accommodation"]').forEach(input => { input.checked = input.value === guest.accommodation; });
+          stay.querySelectorAll('input').forEach(input => { input.checked = input.value === guest.stayPeriod; });
           extras.querySelectorAll('input[name="drinkPackage"]').forEach(input => { input.checked = input.value === guest.drinkPackage; });
           saved.textContent = 'Svaret ditt er lagret.';
           setMessage(message, guest.wedding === 'Ja' ? 'Tusen takk for svaret! Vi gleder oss til å feire sammen med deg!' : 'Tusen takk for at du ga beskjed. Vi kommer til å savne deg på den store dagen!', false);

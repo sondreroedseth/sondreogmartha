@@ -4,7 +4,7 @@ const RSVP = Object.freeze({
   deadline: '2027-01-04T00:00:00+01:00',
   origins: ['https://marthaogsondre.no', 'https://www.marthaogsondre.no'],
   invitationHeaders: ['Invitation ID', 'Code hash', 'Active'],
-  guestHeaders: ['Invitation ID', 'Guest ID', 'Name', 'Wedding', 'Friday', 'Allergies', 'Accommodation', 'Room type', 'RSVP status', 'Last updated', 'Revision', 'Last request ID', 'Last request hash', 'Personlig invitasjonslenke', 'Drikkepakke']
+  guestHeaders: ['Invitation ID', 'Guest ID', 'Name', 'Wedding', 'Friday', 'Allergies', 'Accommodation', 'Room type', 'RSVP status', 'Last updated', 'Revision', 'Last request ID', 'Last request hash', 'Personlig invitasjonslenke', 'Drikkepakke', 'Opphold']
 });
 
 function config_() {
@@ -47,7 +47,7 @@ function authorized_(book, token) {
   return String(matches[0][0]);
 }
 function guestData_(row) {
-  return { id: String(row[1]), name: String(row[2]), wedding: row[3] || '', friday: row[4] || '', allergies: row[5] || '', accommodation: row[6] || '', drinkPackage: row[14] || '', status: row[8] || 'Ikke svart', updated: row[9] instanceof Date ? row[9].toISOString() : String(row[9] || ''), revision: Number(row[10]) || 0 };
+  return { id: String(row[1]), name: String(row[2]), wedding: row[3] || '', friday: row[4] || '', allergies: row[5] || '', accommodation: row[6] || '', stayPeriod: row[15] || '', drinkPackage: row[14] || '', status: row[8] || 'Ikke svart', updated: row[9] instanceof Date ? row[9].toISOString() : String(row[9] || ''), revision: Number(row[10]) || 0 };
 }
 function getInvitation(token) {
   const lock = LockService.getScriptLock();
@@ -70,15 +70,19 @@ function validate_(input) {
   if (typeof input.requestId !== 'string' || !/^[a-f0-9]{32,64}$/.test(input.requestId)) throw new Error('Ugyldig innsending. Last siden på nytt.');
   if (!Number.isSafeInteger(input.revision) || input.revision < 0) throw new Error('Ugyldig versjon. Last inn svarene på nytt.');
   const wedding = answer_(input.wedding), friday = answer_(input.friday);
-  let allergies = '', accommodation = '', drinkPackage = '';
+  let allergies = '', accommodation = '', drinkPackage = '', stayPeriod = '';
   if (wedding === 'Ja') {
     if (!['Med alkohol', 'Uten alkohol'].includes(input.drinkPackage)) throw new Error('Velg drikkepakke med eller uten alkohol. Last siden på nytt hvis du ikke ser valget.');
     drinkPackage = input.drinkPackage;
     accommodation = answer_(input.accommodation);
+    if (accommodation === 'Ja') {
+      if (!['Fredag til søndag', 'Lørdag til søndag'].includes(input.stayPeriod)) throw new Error('Velg om du ønsker rom fra fredag til søndag eller fra lørdag til søndag.');
+      stayPeriod = input.stayPeriod;
+    }
     if (typeof input.allergies !== 'string' || input.allergies.length > 1000 || /[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(input.allergies)) throw new Error('Matbehov må være tekst på maksimalt 1000 tegn.');
     allergies = input.allergies.trim();
   }
-  return { guestId: input.guestId, requestId: input.requestId, revision: input.revision, wedding, friday, allergies, accommodation, drinkPackage };
+  return { guestId: input.guestId, requestId: input.requestId, revision: input.revision, wedding, friday, allergies, accommodation, drinkPackage, stayPeriod };
 }
 function safeCell_(value) {
   // Prevent spreadsheet formulas from user-controlled text, including leading spaces.
@@ -107,7 +111,7 @@ function saveGuest(token, input) {
     updated[3] = data.wedding; updated[4] = data.friday; updated[5] = safeCell_(data.allergies);
     updated[6] = data.accommodation; updated[7] = ''; updated[8] = 'Svart'; updated[9] = new Date();
     updated[10] = data.revision + 1; updated[11] = data.requestId; updated[12] = requestHash;
-    updated[14] = data.drinkPackage;
+    updated[14] = data.drinkPackage; updated[15] = data.stayPeriod;
     table.sheet.getRange(i + 2, 1, 1, updated.length).setValues([updated]);
     SpreadsheetApp.flush();
     // Confirm only after the write and flush have succeeded.
@@ -123,7 +127,13 @@ function setup_() {
     let sheet = book.getSheetByName(name);
     if (!sheet) sheet = book.insertSheet(name);
     if (sheet.getLastRow() === 0) sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-    else table_(book, name, headers); // Never overwrite a pre-existing sheet with another schema.
+    else {
+      const existing = sheet.getDataRange().getValues()[0];
+      if (name === 'Guests' && headers.slice(0, 15).every((h, i) => existing[i] === h) && !existing[15]) {
+        sheet.getRange(1, 16).setValue('Opphold');
+      }
+      table_(book, name, headers);
+    } // Never overwrite a pre-existing sheet with another schema.
     sheet.setFrozenRows(1);
     sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold').setBackground('#e9eddf').setFontColor('#353c2e');
     if (!sheet.getFilter()) sheet.getRange(1, 1, sheet.getMaxRows(), headers.length).createFilter();
