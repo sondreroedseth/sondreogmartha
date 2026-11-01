@@ -143,6 +143,282 @@ footer p { position: relative; margin: 4px 0; font-size: 18px; }
 }
 
   </style>
+<style id="hotel-weekend">
+/* Hotellhelg – lokalt utkast, med eksisterende farger, bilder og fonter. */
+#hotellhelg {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding: 100px 24px 90px;
+  background: #e8e6d9;
+  border-block: 1px solid var(--line);
+}
+#hotellhelg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: url('images/lysebu-sommer.jpg');
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+#hotellhelg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, #263b2224, #263b220a 50%, #263b2224);
+}
+#hotellhelg .eyebrow { color: #67553e; font-weight: 600; }
+#hotellhelg .hotel-inner { max-width: 1080px; margin: auto; }
+#hotellhelg .hotel-heading {
+  max-width: 720px;
+  margin: 0 auto 60px;
+  padding: 38px 36px;
+  text-align: center;
+  background: #fffaf5f5;
+  border: 1px solid var(--line);
+  color: #4b443b;
+}
+#hotellhelg .hotel-heading .eyebrow { margin: 0 0 20px; }
+#hotellhelg .hotel-heading h2 { font-size: clamp(39px, 5vw, 58px); font-weight: 500; color: #4b583b; }
+#hotellhelg .hotel-heading p { max-width: 580px; margin: auto; font-size: 23px; line-height: 1.65; }
+#hotellhelg .hotel-story {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 40px;
+  padding: 12px 0 50px;
+}
+#hotellhelg .hotel-story + .hotel-story {
+  grid-template-columns: 1fr 1fr;
+  padding-top: 30px;
+  padding-bottom: 64px;
+}
+#hotellhelg .hotel-snapshot {
+  width: min(100%, 290px);
+  margin: 0 auto;
+  padding: 11px 11px 0;
+  background: #fffaf5;
+  box-shadow: 0 12px 35px #453f3421, 0 1px 3px #453f3418;
+  transform: none;
+}
+#hotellhelg .hotel-snapshot img { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
+#hotellhelg .hotel-snapshot figcaption {
+  padding: 13px 5px 17px;
+  font: 31px/1.2 var(--script);
+  text-align: center;
+  color: var(--accent-dark);
+}
+#hotellhelg .hotel-snapshot-place { transform: none; width: min(100%, 480px); }
+#hotellhelg .hotel-snapshot-place img { aspect-ratio: 1040 / 693; }
+#hotellhelg .hotel-copy {
+  max-width: 520px;
+  padding: 32px;
+  color: #4b443b;
+  font-weight: 500;
+  background: #fffaf5f5;
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 24px #1d2a1b15;
+}
+#hotellhelg .hotel-copy .eyebrow { margin-bottom: 14px; }
+#hotellhelg .hotel-copy h3 { margin-bottom: 18px; font-size: 34px; font-weight: 500; color: #4b583b; text-wrap: balance; }
+#hotellhelg .hotel-copy p { margin-bottom: 16px; font-size: 22px; line-height: 1.65; }
+#hotellhelg .hotel-booking {
+  max-width: 690px;
+  margin: 12px auto 0;
+  padding: 36px 36px 30px;
+  text-align: center;
+  background: #fffaf5f5;
+  border: 1px solid #d9bca5b3;
+  color: #4b443b;
+  font-weight: 500;
+}
+#hotellhelg .hotel-booking h3 { font-size: 30px; }
+#hotellhelg .hotel-booking p { margin: 12px auto 23px; max-width: 560px; font-size: 21px; }
+#hotellhelg .hotel-booking .hotel-periods {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 25px;
+  margin: 18px 0 22px;
+  font-style: italic;
+  color: var(--accent-dark);
+}
+@media (max-width: 700px) {
+  #hotellhelg { padding: 56px 20px; }
+  #hotellhelg::before { background-attachment: scroll; background-position: 57% center; }
+  #hotellhelg .hotel-heading { margin-bottom: 36px; padding: 28px 22px; }
+  #hotellhelg .hotel-heading p { font-size: 21px; }
+  #hotellhelg .hotel-story,
+  #hotellhelg .hotel-story + .hotel-story { grid-template-columns: 1fr; gap: 35px; padding: 0 0 50px; }
+  #hotellhelg .hotel-snapshot { width: 215px; }
+  #hotellhelg .hotel-snapshot-place { width: 100%; }
+  #hotellhelg .hotel-story + .hotel-story .hotel-snapshot { order: -1; }
+  #hotellhelg .hotel-copy { max-width: 470px; margin: auto; padding: 25px 22px; }
+  #hotellhelg .hotel-copy h3 { font-size: 31px; }
+  #hotellhelg .hotel-copy p { font-size: 21px; }
+  #hotellhelg .hotel-booking { padding: 27px 20px; }
+  #hotellhelg .hotel-periods { flex-direction: column; gap: 4px; }
+}
+
+</style>
+<style id="site-theme">
+/* Samlet, lokal forhåndsvisning av hovedsiden. */
+:root {
+  --bg: #f5efe7;
+  --paper: #fffaf5;
+  --text: #4b443b;
+  --muted: #62594d;
+  --accent-dark: #4b583b;
+  --line: #d9bca5aa;
+  --soft: #eee6da;
+}
+body { font-weight: 500; }
+h1 { font-weight: 400; }
+h2, h3 { font-weight: 500; }
+h2 { font-size: clamp(36px, 4.8vw, 52px); }
+.eyebrow, .detail strong { color: #67553e; font-weight: 600; }
+.nav { background: #fffaf5f5; }
+.nav-inner { max-width: 1200px; }
+.nav-links { gap: 22px; color: var(--text); }
+.btn { font-weight: 500; border-color: #af9160; }
+.btn.primary { background: var(--accent-dark); }
+.btn.primary:hover { background: #3d482f; }
+.btn.secondary { color: #6f5839; background: var(--paper); }
+.btn.secondary:hover { background: #eee5d6; }
+.hero { padding-block: 70px; background: #fff7f0; }
+.hero-card {
+  padding: 40px 24px;
+  background: transparent;
+  border: 0;
+}
+.hero p { max-width: 510px; color: var(--text); font-size: 22px; }
+.hero .eyebrow { color: #67553e; }
+#info { background: var(--bg); }
+#info .intro {
+  max-width: 900px;
+  padding: 0 20px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 23px;
+}
+.grid { gap: 20px; margin-top: 24px; }
+.card {
+  padding: 20px 22px;
+  border: 0;
+  background: transparent;
+}
+.card p { color: var(--text); }
+.split { gap: 42px; }
+#sted .split { align-items: start; }
+#sted .photo { position: sticky; top: 100px; }
+.photo {
+  padding: 11px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  box-shadow: 0 8px 26px #453f3410;
+}
+.photo img { width: 100%; height: auto; max-height: none; aspect-ratio: auto; }
+.details-list { gap: 28px; margin-top: 25px; }
+.detail {
+  padding: 5px 0 5px 21px;
+  border: 0;
+  border-left: 1px solid var(--line);
+  background: transparent;
+}
+.detail strong { margin-bottom: 11px; font-size: 13px; }
+.transport-link { background: #f5efe7; border-color: var(--line); }
+.transport-link:hover { background: #eee6da; }
+.transport-title { color: var(--accent-dark); }
+.transport-description { color: var(--text); }
+#program { background: #eae8dd; }
+#program .intro { color: var(--text); }
+.program-day-card {
+  max-width: 900px;
+  margin: 28px auto 0;
+  padding: 34px 0;
+  border: 0;
+  background: transparent;
+}
+.program-day-card:first-of-type { margin-top: 42px; }
+.program-day-heading { font-size: 32px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+#program .timeline { max-width: none; margin: 26px 0 0; border-left-color: #af9160; }
+#program .timeline-item { padding-bottom: 32px; }
+#program .timeline-item:last-child { padding-bottom: 0; }
+#program .timeline-item::before { background: var(--paper); }
+#program .timeline-item p { color: var(--text); }
+#program .timeline-item h3 { font-size: 27px; }
+#program .time { color: #705a3e; font-weight: 600; font-size: 14px; }
+#antrekk .split { align-items: start; }
+#antrekk .photo { position: sticky; top: 100px; }
+#antrekk h2 { margin-bottom: 28px; }
+#antrekk .details-list { margin-top: 0; }
+#rsvp { background: #eee6da; }
+#rsvp > .container {
+  max-width: 960px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+#rsvp .intro, #rsvp .note { color: var(--text); }
+#rsvp .rsvp-box { background: #f5efe7; }
+#taler { padding-block: 65px; }
+#taler > .container {
+  max-width: 900px;
+  padding: 0 20px;
+  text-align: center;
+  border: 0;
+  background: transparent;
+}
+#taler h2 { font-size: clamp(32px, 4vw, 44px); }
+#taler .intro { color: var(--text); }
+#faq { padding-top: 20px; }
+.faq { gap: 0; border-top: 1px solid var(--line); }
+.faq details { padding: 22px 8px; border: 0; border-bottom: 1px solid var(--line); background: transparent; }
+.faq summary { font-weight: 500; font-size: 25px; }
+.faq details p { color: var(--text); padding-top: 8px; }
+footer { background: #eae8dd; color: var(--text); }
+.footer-flower { transform: none; }
+
+@media (max-width: 1000px) {
+  .nav-inner { flex-direction: column; gap: 8px; padding-block: 10px; }
+  .nav-links { justify-content: center; flex-wrap: wrap; gap: 5px 20px; }
+  section { scroll-margin-top: 145px; }
+  #sted .photo, #antrekk .photo { top: 140px; }
+}
+@media (max-width: 800px) {
+  #sted .photo, #antrekk .photo { position: static; max-width: 430px; }
+  .grid { gap: 14px; }
+  .card, .card:last-child { border: 0; padding: 17px 12px; }
+  #info .intro { padding: 0; font-size: 21px; }
+  .hero-card { padding: 32px 20px; }
+  .program-day-card { padding: 28px 0; }
+  #antrekk .photo { order: 2; }
+  .split { gap: 32px; }
+  #rsvp > .container { padding: 0; }
+}
+@media (max-width: 500px) {
+  .hero-card { width: 86%; padding: 28px 13px; }
+  .hero p { font-size: 20px; }
+  .hero-flower { opacity: .85; }
+  section { padding-inline: 20px; }
+  .detail { padding: 5px 0 5px 18px; }
+  .program-day-card { padding: 25px 0; }
+  .program-day-heading { font-size: 28px; }
+  #program .timeline-item { padding-left: 22px; }
+  #program .timeline-item h3 { font-size: 25px; }
+  #rsvp { padding-inline: 14px; }
+  #rsvp > .container { padding: 0; }
+  #rsvp h2 { font-size: 35px; }
+  #taler > .container { padding: 0; }
+  .faq details { padding: 20px 4px; }
+  .faq summary { font-size: 23px; }
+}
+
+</style>
 </head>
 
 <body>
@@ -152,6 +428,7 @@ footer p { position: relative; margin: 4px 0; font-size: 18px; }
 
       <div class="nav-links">
         <a href="#info">Info</a>
+        <a href="#hotellhelg">Helgen</a>
         <a href="#sted">Sted</a>
         <a href="#program">Program</a>
         <a href="#rsvp">Svarskjema</a>
@@ -208,6 +485,50 @@ footer p { position: relative; margin: 4px 0; font-size: 18px; }
             <h3>Bryllupsmiddag</h3>
             <p>Middag og fest fra kl. 17:00 på Lysebu Hotell</p>
           </article>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="hotellhelg" aria-labelledby="hotel-heading">
+      <div class="hotel-inner">
+        <header class="hotel-heading">
+          <div class="eyebrow">16.–18. juli 2027 · Lysebu</div>
+          <h2 id="hotel-heading">Vi gjør en helg ut av det</h2>
+          <p>En bryllupsdag går fort. Vi har lyst på litt mer tid med dere, og håper mange vil bo på Lysebu sammen med oss.</p>
+        </header>
+
+        <div class="hotel-story">
+          <figure class="hotel-snapshot hotel-snapshot-place">
+            <img src="images/lysebu-fasade.jpg" width="1040" height="693" alt="Lysebu Hotell omgitt av trær" loading="lazy">
+            <figcaption>Lysebu, hele helgen</figcaption>
+          </figure>
+          <div class="hotel-copy">
+            <div class="eyebrow">Litt mer enn selve bryllupsdagen</div>
+            <h3>Tid til å prate med alle</h3>
+            <p>På lørdag blir det mye som skjer, og vi vet at tiden til å sette seg ned og prate blir knapp. Derfor starter vi allerede på fredag med mat, drikke og aktiviteter.</p>
+            <p>Med hotellet som felles base blir det lettere å finne hverandre, fortsette en samtale og bli kjent med folk dere kanskje ikke har møtt før.</p>
+          </div>
+        </div>
+
+        <div class="hotel-story">
+          <div class="hotel-copy">
+            <div class="eyebrow">Fra festen til frokostbordet</div>
+            <h3>Hyggelig å møtes igjen dagen etter</h3>
+            <p>Når kvelden er over, er det kort vei til rommet. Ingen taxi å vente på eller siste avgang å rekke.</p>
+            <p>På søndag møtes vi til frokost før hjemreisen. Vi gleder oss til å høre historiene fra kvelden før og få en rolig avslutning på helgen sammen med dere.</p>
+          </div>
+          <figure class="hotel-snapshot">
+            <img src="images/sondre-og-martha.jpg" width="600" height="800" alt="Martha og Sondre sammen" loading="lazy">
+            <figcaption>En helg sammen</figcaption>
+          </figure>
+        </div>
+
+        <div class="hotel-booking">
+          <h3>Et rom på Lysebu?</h3>
+          <p>Vi har holdt av rom til bryllupsgjestene. Velg ønsket opphold i svarskjemaet, så gir vi beskjed til hotellet og sørger for at dere blir registrert.</p>
+          <div class="hotel-periods"><span>Fredag–søndag</span><span>Lørdag–søndag</span></div>
+          <a class="btn secondary" href="#rsvp">Svar på invitasjonen</a>
         </div>
       </div>
     </section>
@@ -324,9 +645,9 @@ footer p { position: relative; margin: 4px 0; font-size: 18px; }
     <div class="eyebrow" style="text-align: center;">Bryllupshelgen</div>
     <h2 style="text-align: center;">Helgens program</h2>
     <p class="intro">En helg å glede seg til. Vi starter rolig på fredag, feirer stort på lørdag og runder av sammen på søndag. Tidene kan justeres litt nærmere helgen.</p>
-    <div style="max-width: 720px; margin: 44px auto 0;"><h3>Fredag 16. juli · En hyggelig start på helgen</h3></div><div class="timeline" style="margin-top: 24px;"><div class="timeline-item"><div class="time">18:00</div><h3>Bli kjent kveld</h3><p>Vi møtes på hotellet og går samlet til stedet for kveldens sammenkomst. Her blir det mat, drikke og aktiviteter – og god tid til å bli kjent før den store dagen.</p></div>
+    <article class="program-day-card"><h3 class="program-day-heading">Fredag 16. juli · En hyggelig start på helgen</h3><div class="timeline"><div class="timeline-item"><div class="time">18:00</div><h3>Bli kjent kveld</h3><p>Vi møtes på hotellet og går samlet til stedet for kveldens sammenkomst. Her blir det mat, drikke og aktiviteter – og god tid til å bli kjent før den store dagen.</p></div>
 <div class="timeline-item"><div class="time">Senere på kvelden</div><h3>Tilbake til Lysebu</h3><p>Vi går sammen tilbake til hotellet og runder av med en rolig kveld i hotellets lokaler før morgendagens feiring.</p></div></div>
-    <div style="max-width: 720px; margin: 44px auto 0;"><h3>Lørdag 17. juli · Den store dagen</h3></div><div class="timeline" style="margin-top: 24px;"><div class="timeline-item"><div class="time">13:00</div><h3>Vielse i Holmenkollen Kapell</h3><p>Vi sier ja til å dele livet sammen.</p></div>
+    </article><article class="program-day-card"><h3 class="program-day-heading">Lørdag 17. juli · Den store dagen</h3><div class="timeline"><div class="timeline-item"><div class="time">13:00</div><h3>Vielse i Holmenkollen Kapell</h3><p>Vi sier ja til å dele livet sammen.</p></div>
 <div class="timeline-item"><div class="time">13:45</div><h3>Bildetaking utenfor kapellet</h3><p>Vi samles utenfor kapellet før brudeparet drar videre til fotografering.</p></div>
 <div class="timeline-item"><div class="time">15:00</div><h3>Velkommen til Lysebu</h3><p>Bobler og mingling på terrassen. For dere som ankommer lørdag, blir det også anledning til å sjekke inn.</p></div>
 <div class="timeline-item"><div class="time">15:30–17:00</div><h3>Bryllupskake og videre mingling</h3><p>Brudeparet er tilbake, og vi skjærer bryllupskaken sammen.</p></div>
@@ -334,23 +655,16 @@ footer p { position: relative; margin: 4px 0; font-size: 18px; }
 <div class="timeline-item"><div class="time">22:30</div><h3>Middagen er over og vi trekker ut i sidelokalene</h3><p>Dansegulvet og kakebordet åpner, og festen fortsetter.</p></div>
 <div class="timeline-item"><div class="time">00:30</div><h3>Nattmat</h3><p>Litt påfyll etter en kveld på dansegulvet.</p></div>
 <div class="timeline-item"><div class="time">01:30</div><h3>Takk for i kveld</h3><p>Vi runder av festen – og gleder oss til å se mange av dere igjen rundt frokostbordet.</p></div></div>
-    <div style="max-width: 720px; margin: 44px auto 0;"><h3>Søndag 18. juli · En siste stund sammen</h3></div><div class="timeline" style="margin-top: 24px;"><div class="timeline-item"><div class="time">Tidspunkt kommer</div><h3>Frokost og farvell</h3><p>Vi runder av bryllupshelgen med frokost på Lysebu. Tid for en kaffe, historier fra kvelden før og noen siste klemmer før hjemreisen.</p></div></div>
+    </article><article class="program-day-card"><h3 class="program-day-heading">Søndag 18. juli · En siste stund sammen</h3><div class="timeline"><div class="timeline-item"><div class="time">Tidspunkt kommer</div><h3>Frokost og farvell</h3><p>Vi runder av bryllupshelgen med frokost på Lysebu. Tid for en kaffe, historier fra kvelden før og noen siste klemmer før hjemreisen.</p></div></div></article>
   </div>
 </section>
 
-    <section>
-      <div class="container split">
-        <div class="photo">
+    <section id="antrekk"><div class="container split"><div class="photo">
           <img
             src="images/brudepar.avif"
             alt="Brudepar i sommerlige omgivelser"
           />
-        </div>
-
-        <div>
-          <div class="eyebrow">Kleskode og gaver</div>
-           <div class="details-list">
-            <div class="detail">
+        </div><div><div class="eyebrow">Praktisk før feiringen</div><h2>Antrekk, gaver og barn</h2><div class="details-list"><div class="detail">
               <strong>Kleskode</strong>
 
               <p>
@@ -359,8 +673,7 @@ footer p { position: relative; margin: 4px 0; font-size: 18px; }
                 Det viktigste for oss er å feire dagen sammen med deg.
               </p>
             </div>
-          <div class="details-list">
-            <div class="detail">
+<div class="detail">
               <strong>Gaver</strong>
 
               <p>
@@ -371,19 +684,14 @@ footer p { position: relative; margin: 4px 0; font-size: 18px; }
               </p>
               <a class="btn secondary" style="margin-top: 18px;" href="onskeliste.html" target="_blank" rel="noopener noreferrer">Se ønskelisten vår →</a>
             </div>
-
-            <div class="detail">
+<div class="detail">
               <strong>Barn</strong>
 
               <p>
                 Vi er veldig glade i barna deres, men denne dagen feires
                 med voksne gjester, med mindre annet er avtalt.
               </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+            </div></div></div></div></section>
 
     <section class="rsvp" id="rsvp">
       <div class="container">
