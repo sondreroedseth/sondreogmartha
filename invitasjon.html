@@ -91,8 +91,8 @@
     .details{padding:70px 24px 55px;text-align:center;max-width:1100px;margin:auto}
     .section-label{margin:0;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#9b8161}
     .guest-greeting{font-size:30px;font-style:italic;margin:24px 0 12px}
-    .details h2{font-size:clamp(32px,4.8vw,52px);line-height:1.12;font-weight:400;margin:0 auto 24px;max-width:600px}
-    .guest-message{max-width:600px;margin:0 auto;font-size:21px;line-height:1.6;color:#847568}
+    .details h2{font-size:25.5px;line-height:1.12;font-weight:400;margin:0 auto 24px;max-width:600px}
+    .guest-message{max-width:600px;margin:0 auto;font-size:21px;line-height:1.6;color:#847568;white-space:pre-line}
     .signature{font-family:var(--script);font-size:28px;line-height:1.35;margin:22px 0 28px;color:#847568}.signature-intro{display:block;font-family:var(--serif);font-size:17px;line-height:1.6;margin-bottom:4px}
     .site-link{display:inline-block;padding:14px 26px;text-decoration:none;border:1px solid var(--gold);border-radius:2px;color:#846943;background:#fff9f280;font-size:15px;letter-spacing:.02em;transition:background .2s}
     .site-link:hover{background:#eed9c8}
@@ -107,6 +107,7 @@
     .invitation-footer .site-link{margin:0 0 32px;letter-spacing:.02em}
     .no-script{position:fixed;z-index:20;inset:0;display:grid;place-content:center;padding:30px;text-align:center;background:var(--paper)}
     @media(max-width:600px){.cover-copy{top:18%}.guest-names{font-size:clamp(35px,10vw,55px)}.seal-wrap{gap:23px}.seal-button{width:96px}.cover-footer{font-size:10px}.hero{padding:62px 16px 100px;min-height:max(610px,100svh)}.hero:before{inset:13px}.hero-copy{width:80%}.couple-names{font-size:clamp(62px,19vw,88px)}.hero-kicker{font-size:10px;letter-spacing:.19em}.hero-date{font-size:15px}.hero-place{font-size:17px}.floral{width:49%;height:83%;top:9%}.floral-left{left:-13%}.floral-right{right:-13%}.details{padding:54px 27px 45px}.guest-message{font-size:19px}.venues{grid-template-columns:1fr;gap:22px;padding:0 24px 45px}.venue-copy h3{font-size:28px}}
+    @media(max-width:600px){.details h2{font-size:24.5px}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:1ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition:none!important;scroll-behavior:auto!important}.is-revealed .floral,.is-revealed .hero-kicker,.is-revealed .name-line,.is-revealed .ampersand,.is-revealed .hero-rule,.is-revealed .hero-date,.is-revealed .hero-place{opacity:1;clip-path:none}}
   </style>
 </head>
@@ -178,7 +179,7 @@
       document.querySelector('#guestCover').textContent = guest.replace(/\s+og\s+/i, ' & ');
       document.querySelector('#guestInside').textContent = guest;
       document.querySelector('#guestHeading').textContent = 'Vi håper ' + subject + ' vil feire kjærligheten med oss';
-      document.querySelector('#guestMessage').textContent = 'Den 17. Juli 2027 gir vi hverandre vårt ja i Holmenkollen Kapell, og vi håper ' + object + ' vil være der og dele dette øyeblikket med oss. Vi ønsker å samle familie og venner til mer enn bare én dag, og inviterer derfor til en bryllupshelg på Lysebu. Her håper vi å skape gode minner, med tid til både hyggelige samtaler, latter og feiring. På bryllupsnettsiden finner ' + object + ' mer informasjon om helgen og hvordan ' + subject + ' svarer på invitasjonen.';
+      document.querySelector('#guestMessage').textContent = 'Den 17. Juli 2027 gir vi hverandre vårt ja i Holmenkollen Kapell, og vi håper ' + object + ' vil være der og dele dette øyeblikket med oss.\n\nVi ønsker å samle familie og venner til mer enn bare én dag, og inviterer derfor til en bryllupshelg på Lysebu. Her håper vi å skape gode minner, med tid til både hyggelige samtaler, latter og feiring.\n\nPå bryllupsnettsiden finner ' + object + ' mer informasjon om helgen og hvordan ' + subject + ' svarer på invitasjonen.';
       document.title = 'Invitasjon til ' + guest + ' - Martha & Sondre';
       const siteUrl = new URL(document.querySelector('#mainSiteLink').href);
       if (window.RsvpBridge.hasToken) {
