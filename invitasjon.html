@@ -177,8 +177,8 @@
       const object = multipleGuests ? 'dere' : 'deg';
       document.querySelector('#guestCover').textContent = guest.replace(/\s+og\s+/i, ' & ');
       document.querySelector('#guestInside').textContent = guest;
-      document.querySelector('#guestHeading').textContent = 'Vi håper ' + subject + ' vil feire dagen med oss';
-      document.querySelector('#guestMessage').textContent = 'Det vil bety svært mye for oss å ha ' + object + ' til stede når vi gir hverandre vårt ja. Vi gleder oss til en uforglemmelig dag sammen med ' + object + '. Besøk bryllupsnettsiden vår via lenken nedenfor, og gi beskjed i svarskjemaet om ' + subject + ' kommer.';
+      document.querySelector('#guestHeading').textContent = 'Vi håper ' + subject + ' vil feire kjærligheten med oss';
+      document.querySelector('#guestMessage').textContent = 'Den 17. Juli 2027 gir vi hverandre vårt ja i Holmenkollen Kapell, og vi håper ' + object + ' vil være der og dele dette øyeblikket med oss. Vi ønsker å samle familie og venner til mer enn bare én dag, og inviterer derfor til en bryllupshelg på Lysebu. Her håper vi å skape gode minner, med tid til både hyggelige samtaler, latter og feiring. På bryllupsnettsiden finner ' + object + ' mer informasjon om helgen og hvordan ' + subject + ' svarer på invitasjonen.';
       document.title = 'Invitasjon til ' + guest + ' - Martha & Sondre';
       const siteUrl = new URL(document.querySelector('#mainSiteLink').href);
       if (window.RsvpBridge.hasToken) {
