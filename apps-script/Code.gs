@@ -1,7 +1,7 @@
 /* Only doGet, getInvitation, saveGuest and saveInvitation are callable from the guest web app.
    Every admin/helper function MUST retain its trailing underscore. */
 const RSVP = Object.freeze({
-  roomLimits: Object.freeze({ 'Dobbeltrom': 10, 'Superior Dobbeltrom': 30, 'Enkeltrom': 10 }),
+  roomLimits: Object.freeze({ 'Dobbeltrom': 12, 'Superior Dobbeltrom': 30, 'Enkeltrom': 10 }),
   deadline: '2027-01-04T00:00:00+01:00',
   origins: ['https://marthaogsondre.no', 'https://www.marthaogsondre.no'],
   invitationHeaders: ['Invitation ID', 'Code hash', 'Active'],

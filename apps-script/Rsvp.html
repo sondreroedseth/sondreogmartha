@@ -107,13 +107,13 @@
       stay.className = 'stay-options';
       const stayRows = guests.map(g => ({ guest: g, group: radio(extras, g.id, g.id + '-stay', 'Opphold for ' + g.name, g.stayPeriod, true, periods) }));
       const roomTypes = ['Dobbeltrom', 'Superior Dobbeltrom', 'Enkeltrom'];
-      const roomPrices = { Dobbeltrom: '2055', 'Superior Dobbeltrom': '2340', Enkeltrom: '1250' };
+      const roomPrices = { Dobbeltrom: '1550', 'Superior Dobbeltrom': '1850', Enkeltrom: '1250' };
       const roomValues = guests.filter(g => g.accommodation === 'Ja').map(g => g.roomType || '');
       const room = radio(extras, 'invitation', 'roomType', plural ? 'Hvilken romtype ønsker dere?' : 'Hvilken romtype ønsker du?', new Set(roomValues).size === 1 ? roomValues[0] : '', true, roomTypes);
       room.className = 'room-options';
       room.querySelectorAll('label').forEach((label, i) => {
         const title = node('span', '', 'room-description');
-        title.append(node('strong', roomTypes[i]), node('span', roomPrices[roomTypes[i]] + ' kr per natt ved 1 natt, inkl. frokost', 'room-price'), node('span', 'XXXX kr per natt ved 2 netter, inkl. frokost', 'room-price'));
+        title.append(node('strong', roomTypes[i]), node('span', roomPrices[roomTypes[i]] + ' kr per natt, inkl. frokost', 'room-price'), node('span', 'Samme pris per natt ved 1 og 2 netter.', 'room-price'));
         label.lastChild.remove(); label.append(title);
       });
       const roomNotice = node('p', '', 'hint'); roomNotice.setAttribute('role', 'status'); room.append(roomNotice);

@@ -244,7 +244,7 @@ function seedRooms(b, type, count) {
 }
 
 test('all three room limits are read from current guest rows and enforce the last room', () => {
-  for (const [type, limit] of [['Dobbeltrom', 10], ['Superior Dobbeltrom', 30], ['Enkeltrom', 10]]) {
+  for (const [type, limit] of [['Dobbeltrom', 12], ['Superior Dobbeltrom', 30], ['Enkeltrom', 10]]) {
     const b = backend(); seedRooms(b, type, limit - 1);
     assert.equal(b.api.getInvitation(tokenA).roomAvailability[type].remaining, 1);
     b.api.saveGuest(tokenA, answer({roomType:type}));
@@ -265,14 +265,14 @@ test('two guests share one double room; two single rooms are counted separately'
     const b=backend();
     const result=b.api.saveInvitation(tokenA,[answer({roomType}),answer({guestId:'guest-a2',roomType})]);
     assert.equal(result.guests.length,2);
-    assert.equal(b.api.getInvitation(tokenA).roomAvailability[roomType].remaining, (roomType==='Superior Dobbeltrom'?30:10)-(roomType==='Enkeltrom'?2:1));
+    assert.equal(b.api.getInvitation(tokenA).roomAvailability[roomType].remaining, (roomType==='Superior Dobbeltrom'?30:roomType==='Dobbeltrom'?12:10)-(roomType==='Enkeltrom'?2:1));
     assert.equal(b.api.saveInvitation(tokenA,[answer({roomType}),answer({guestId:'guest-a2',roomType})]).duplicate,true);
     assert.equal(b.writes,2);
   }
 });
 
 test('capacity is checked for the entire invitation before writing and after taking the lock', () => {
-  const b=backend();seedRooms(b,'Dobbeltrom',9);
+  const b=backend();seedRooms(b,'Dobbeltrom',11);
   const third=[...b.tables.Guests.values[1]];third[1]='guest-a3';b.tables.Guests.values.push(third);
   assert.throws(()=>b.api.saveInvitation(tokenA,[answer(),answer({guestId:'guest-a2'}),answer({guestId:'guest-a3'})]),/fullbooket/);
   assert.equal(b.writes,0);
@@ -299,9 +299,9 @@ test('group saves reject foreign guests, duplicate IDs and stale answers before 
 test('different stay periods share the same Saturday inventory; three double-room guests need two rooms', () => {
   const b=backend();const third=[...b.tables.Guests.values[1]];third[1]='guest-a3';b.tables.Guests.values.push(third);
   b.api.saveInvitation(tokenA,[answer(),answer({guestId:'guest-a2',stayPeriod:'Lørdag til søndag'}),answer({guestId:'guest-a3'})]);
-  assert.equal(b.api.getInvitation(tokenA).roomAvailability.Dobbeltrom.remaining,8);
+  assert.equal(b.api.getInvitation(tokenA).roomAvailability.Dobbeltrom.remaining,10);
   b.api.saveGuest(tokenA,answer({guestId:'guest-a3',revision:1,requestId:'2'.repeat(32),wedding:'Nei'}));
-  assert.equal(b.api.getInvitation(tokenA).roomAvailability.Dobbeltrom.remaining,9);
+  assert.equal(b.api.getInvitation(tokenA).roomAvailability.Dobbeltrom.remaining,11);
 });
 
 test('Friday can be uncertain, persists in the sheet and can later change to yes or no', () => {

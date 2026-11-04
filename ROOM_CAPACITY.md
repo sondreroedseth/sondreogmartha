@@ -1,6 +1,6 @@
 # Romkapasitet
 
-Grensene i `RSVP.roomLimits` er 10 Dobbeltrom, 30 Superior Dobbeltrom og
+Grensene i `RSVP.roomLimits` er 12 Dobbeltrom, 30 Superior Dobbeltrom og
 10 Enkeltrom. Brukte rom beregnes fra gjeldende rader i `Guests` hver gang
 invitasjonen hentes og svar lagres. Ingen separat teller må oppdateres manuelt.
 
@@ -33,3 +33,5 @@ kapasitet per romtype. Ingen reelle gjestelistedata brukes i forhåndsvisningen.
 Publisert 4. november 2026 som Apps Script-versjon 5 på eksisterende nettappadresse.
 `Code.gs` og `Rsvp.html` deployes sammen. Nettsidens GitHub-deploy alene oppdaterer ikke skjemaet.
 Romoversikt i Google-arket viser romgrenser og formler som speiler serverens telling.
+
+Oppdatert 4. november 2026: 10 enkeltrom à 1250 kr, 12 dobbeltrom à 1550 kr og 30 superior dobbeltrom à 1850 kr per natt, inkl. frokost. Samme pris per natt ved ett og to døgn.

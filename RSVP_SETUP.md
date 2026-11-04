@@ -212,3 +212,5 @@ Automatiske tester kjører den faktiske Code.gs med erstatninger for Google Shee
 
 
 Oppdatert 4. november 2026: Apps Script-versjon 5 er publisert på samme nettappadresse. Invitasjonen har ett samlet svarskjema, med individuelle valg for deltakelse, fredag, drikkepakke og matbehov, samt hotellrom og opphold. Friday støtter Usikker. Room type er obligatorisk ved overnatting. Kapasitet på 10 Dobbeltrom, 30 Superior Dobbeltrom og 10 Enkeltrom kontrolleres fra Guests-radene under lås ved samlet innsending. Se ROOM_CAPACITY.md. Google-arket har oppdaterte valideringer, flere summeringer i Oversikt og en Romoversikt-fane. Publisert ende-til-ende-test verifiserte alle nye felter og at to personer telt som ett superiorrom; testsvarene ble deretter nullstilt.
+
+Oppdatert 4. november 2026, Apps Script-versjon 6: 10 enkeltrom à 1250 kr, 12 dobbeltrom à 1550 kr og 30 superior dobbeltrom à 1850 kr per natt. Samme pris per natt ved ett og to døgn. Prisene er oppdatert i Rsvp.html og Romoversikt E:F. Tidligere prisplassholdere er fjernet.
