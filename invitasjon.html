@@ -6,8 +6,21 @@
   <meta name="referrer" content="no-referrer">
   <script src="analytics.js" defer></script>
   <meta name="theme-color" content="#f4e5e2">
-  <title>Invitasjon — Martha &amp; Sondre</title>
-  <meta name="description" content="Personlig invitasjon til bryllupet til Martha og Sondre, 17. juli 2027.">
+  <title>Martha + Sondre 2027</title>
+  <meta name="description" content="Velkommen til bryllupshelgen vår · 16.-18. juli på Lysebu">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="nb_NO">
+  <meta property="og:url" content="https://marthaogsondre.no/invitasjon.html">
+  <meta property="og:title" content="Martha + Sondre 2027">
+  <meta property="og:description" content="Velkommen til bryllupshelgen vår · 16.-18. juli på Lysebu">
+  <meta property="og:image" content="https://marthaogsondre.no/images/sondre-og-martha.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:alt" content="Martha og Sondre sammen">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Martha + Sondre 2027">
+  <meta name="twitter:description" content="Velkommen til bryllupshelgen vår · 16.-18. juli på Lysebu">
+  <meta name="twitter:image" content="https://marthaogsondre.no/images/sondre-og-martha.jpg">
+  <meta name="twitter:image:alt" content="Martha og Sondre sammen">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet">
@@ -166,7 +179,7 @@
       document.querySelector('#guestInside').textContent = guest;
       document.querySelector('#guestHeading').textContent = 'Vi håper ' + subject + ' vil feire dagen med oss';
       document.querySelector('#guestMessage').textContent = 'Det vil bety svært mye for oss å ha ' + object + ' til stede når vi gir hverandre vårt ja. Vi gleder oss til en uforglemmelig dag sammen med ' + object + '. Besøk bryllupsnettsiden vår via lenken nedenfor, og gi beskjed i svarskjemaet om ' + subject + ' kommer.';
-      document.title = 'Invitasjon til ' + guest + ' — Martha & Sondre';
+      document.title = 'Invitasjon til ' + guest + ' - Martha & Sondre';
       const siteUrl = new URL(document.querySelector('#mainSiteLink').href);
       if (window.RsvpBridge.hasToken) {
         siteUrl.searchParams.delete('gjest');
