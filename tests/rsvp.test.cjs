@@ -30,7 +30,25 @@ function backend() {
     ['invite-b', 'guest-b1', 'Testgjest tre', '', '', '', '', '', 'Ikke svart', '', 0, '', '']]);
   return { api: ctx, tables, setTime(value) { now = Date.parse(value); }, setOnLock(fn) { onLock = fn; }, setBusy(value) { busy = value; }, failStorage(value) { fail = value; }, get writes() { return writes; }, get locked() { return locked; } };
 }
-function answer(overrides = {}) { return { guestId: 'guest-a1', revision: 0, requestId: '1'.repeat(32), wedding: 'Ja', friday: 'Ja', allergies: 'Nøtter', accommodation: 'Ja', stayPeriod: 'Fredag til søndag', drinkPackage: 'Med alkohol', ...overrides }; }
+function answer(overrides = {}) { return { guestId: 'guest-a1', revision: 0, requestId: '1'.repeat(32), wedding: 'Ja', friday: 'Ja', allergies: 'Nøtter', accommodation: 'Ja', roomType: 'Dobbeltrom', stayPeriod: 'Fredag til søndag', drinkPackage: 'Med alkohol', ...overrides }; }
+
+test('room types are validated, saved in the existing room column and cleared when declining', () => {
+  for (const roomType of ['', undefined, null, 'Suite', true]) {
+    const b = backend();
+    assert.throws(() => b.api.saveGuest(tokenA, answer({ roomType })), /Velg ønsket romtype/);
+    assert.equal(b.writes, 0);
+  }
+  for (const roomType of ['Dobbeltrom', 'Superior Dobbeltrom', 'Enkeltrom']) {
+    const b = backend();
+    b.api.saveGuest(tokenA, answer({ roomType }));
+    assert.equal(b.tables.Guests.values[1][7], roomType);
+    assert.equal(b.api.getInvitation(tokenA).guests[0].roomType, roomType);
+    const noHotel = b.api.saveGuest(tokenA, answer({ revision: 1, requestId: '2'.repeat(32), accommodation: 'Nei', roomType }));
+    assert.equal(noHotel.guest.roomType, '');
+    b.api.saveGuest(tokenA, answer({ revision: 2, requestId: '3'.repeat(32), roomType }));
+    assert.equal(b.api.saveGuest(tokenA, answer({ revision: 3, requestId: '4'.repeat(32), wedding: 'Nei', roomType })).guest.roomType, '');
+  }
+});
 
 test('hotel dates are required, persist on reload, change and clear when declining', () => {
   for (const stayPeriod of ['', undefined, null, 'Fredag', true]) {
@@ -154,7 +172,7 @@ test('ambiguous guest rows and invitation hashes fail closed', () => {
 });
 test('only intended guest endpoints are public; no secret token is put in iframe URL', () => {
   const funcs = Array.from(source.matchAll(/^function (\w+)\(/gm), match => match[1]).filter(name => !name.endsWith('_'));
-  assert.deepEqual(funcs, ['doGet', 'getInvitation', 'saveGuest']);
+  assert.deepEqual(funcs, ['doGet', 'getInvitation', 'saveGuest', 'saveInvitation']);
   const bridge = fs.readFileSync(path.join(root, 'rsvp-bridge.js'), 'utf8');
   assert.equal(/searchParams\.set\(['"](?:token|invitasjon)['"]/.test(bridge), false);
   const config = fs.readFileSync(path.join(root, 'rsvp-config.js'), 'utf8');
@@ -216,4 +234,87 @@ test('doGet rejects arbitrary embedding origins and never embeds guest informati
   b.api.doGet({ parameter: { parent: 'https://marthaogsondre.no', channel: 'f'.repeat(48), mode: 'form', token: tokenA } });
   assert.equal(bootstrap.includes(tokenA), false);
   assert.equal(JSON.parse(bootstrap).parent, 'https://marthaogsondre.no');
+});
+function seedRooms(b, type, count) {
+  for (let i = 0; i < count; i++) {
+    const row = Array(16).fill('');
+    Object.assign(row, { 0: 'seed-' + type + '-' + i, 1: 'seed-guest-' + i, 2: 'Fiktiv gjest', 3: 'Ja', 4: 'Nei', 6: 'Ja', 7: type, 8: 'Svart', 10: 0, 14: 'Med alkohol', 15: 'Lørdag til søndag' });
+    b.tables.Guests.values.push(row);
+  }
+}
+
+test('all three room limits are read from current guest rows and enforce the last room', () => {
+  for (const [type, limit] of [['Dobbeltrom', 10], ['Superior Dobbeltrom', 30], ['Enkeltrom', 10]]) {
+    const b = backend(); seedRooms(b, type, limit - 1);
+    assert.equal(b.api.getInvitation(tokenA).roomAvailability[type].remaining, 1);
+    b.api.saveGuest(tokenA, answer({roomType:type}));
+    assert.equal(b.api.getInvitation(tokenB).roomAvailability[type].remaining, 0);
+    assert.equal(b.api.getInvitation(tokenB).roomAvailability[type].availableForInvitation, 0);
+    assert.throws(() => b.api.saveGuest(tokenB, answer({guestId:'guest-b1',roomType:type})), /fullbooket/);
+    assert.equal(b.writes, 1);
+    assert.equal(b.api.getInvitation(tokenA).roomAvailability[type].availableForInvitation, 1);
+    b.api.saveGuest(tokenA, answer({revision:1,requestId:'2'.repeat(32),roomType:type,drinkPackage:'Uten alkohol'}));
+    assert.equal(b.api.getInvitation(tokenA).roomAvailability[type].remaining, 0);
+    b.api.saveGuest(tokenA, answer({revision:2,requestId:'3'.repeat(32),accommodation:'Nei'}));
+    assert.equal(b.api.getInvitation(tokenB).roomAvailability[type].remaining, 1);
+  }
+});
+
+test('two guests share one double room; two single rooms are counted separately', () => {
+  for(const roomType of ['Dobbeltrom','Superior Dobbeltrom','Enkeltrom']) {
+    const b=backend();
+    const result=b.api.saveInvitation(tokenA,[answer({roomType}),answer({guestId:'guest-a2',roomType})]);
+    assert.equal(result.guests.length,2);
+    assert.equal(b.api.getInvitation(tokenA).roomAvailability[roomType].remaining, (roomType==='Superior Dobbeltrom'?30:10)-(roomType==='Enkeltrom'?2:1));
+    assert.equal(b.api.saveInvitation(tokenA,[answer({roomType}),answer({guestId:'guest-a2',roomType})]).duplicate,true);
+    assert.equal(b.writes,2);
+  }
+});
+
+test('capacity is checked for the entire invitation before writing and after taking the lock', () => {
+  const b=backend();seedRooms(b,'Dobbeltrom',9);
+  const third=[...b.tables.Guests.values[1]];third[1]='guest-a3';b.tables.Guests.values.push(third);
+  assert.throws(()=>b.api.saveInvitation(tokenA,[answer(),answer({guestId:'guest-a2'}),answer({guestId:'guest-a3'})]),/fullbooket/);
+  assert.equal(b.writes,0);
+  b.api.saveInvitation(tokenA,[answer(),answer({guestId:'guest-a2'})]);
+  assert.equal(b.api.getInvitation(tokenA).roomAvailability.Dobbeltrom.remaining,0);
+  const c=backend();seedRooms(c,'Enkeltrom',9);
+  assert.equal(c.api.getInvitation(tokenA).roomAvailability.Enkeltrom.remaining,1);
+  c.setOnLock(()=>seedRooms(c,'Enkeltrom',1));
+  assert.throws(()=>c.api.saveGuest(tokenA,answer({roomType:'Enkeltrom'})),/fullbooket/);
+  assert.equal(c.writes,0);
+});
+
+test('group saves reject foreign guests, duplicate IDs and stale answers before any write', () => {
+  const b=backend();
+  assert.throws(()=>b.api.saveInvitation(tokenA,[answer(),answer({guestId:'guest-b1'})]),/tilhører ikke/);
+  assert.throws(()=>b.api.saveInvitation(tokenA,[answer(),answer()]),/én gang/);
+  assert.throws(()=>b.api.saveInvitation(tokenA,[answer(),answer({guestId:'guest-a2',revision:1})]),/annet vindu/);
+  assert.equal(b.writes,0);
+  b.setBusy(true);
+  assert.throws(()=>b.api.saveInvitation(tokenA,[answer()]),/trafikk/);
+  assert.equal(b.writes,0);
+});
+
+test('different stay periods share the same Saturday inventory; three double-room guests need two rooms', () => {
+  const b=backend();const third=[...b.tables.Guests.values[1]];third[1]='guest-a3';b.tables.Guests.values.push(third);
+  b.api.saveInvitation(tokenA,[answer(),answer({guestId:'guest-a2',stayPeriod:'Lørdag til søndag'}),answer({guestId:'guest-a3'})]);
+  assert.equal(b.api.getInvitation(tokenA).roomAvailability.Dobbeltrom.remaining,8);
+  b.api.saveGuest(tokenA,answer({guestId:'guest-a3',revision:1,requestId:'2'.repeat(32),wedding:'Nei'}));
+  assert.equal(b.api.getInvitation(tokenA).roomAvailability.Dobbeltrom.remaining,9);
+});
+
+test('Friday can be uncertain, persists in the sheet and can later change to yes or no', () => {
+  const b = backend();
+  b.api.saveInvitation(tokenA, [answer({friday:'Usikker'}), answer({guestId:'guest-a2',friday:'Usikker'})]);
+  assert.equal(b.tables.Guests.values[1][4], 'Usikker');
+  assert.equal(b.api.getInvitation(tokenA).guests[1].friday, 'Usikker');
+  b.api.saveGuest(tokenA, answer({revision:1,requestId:'2'.repeat(32),friday:'Ja'}));
+  assert.equal(b.api.getInvitation(tokenA).guests[0].friday, 'Ja');
+  b.api.saveGuest(tokenA, answer({revision:2,requestId:'3'.repeat(32),friday:'Nei'}));
+  assert.equal(b.api.getInvitation(tokenA).guests[0].friday, 'Nei');
+  assert.throws(()=>b.api.saveGuest(tokenA,answer({wedding:'Usikker'})),/ja eller nei/);
+  for (const friday of [null, true, 'Kanskje', '']) {
+    assert.throws(()=>b.api.saveGuest(tokenA,answer({friday})),/ja, nei eller usikker/);
+  }
 });

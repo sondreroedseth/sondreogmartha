@@ -1,6 +1,7 @@
-/* Only doGet, getInvitation and saveGuest are callable from the guest web app.
+/* Only doGet, getInvitation, saveGuest and saveInvitation are callable from the guest web app.
    Every admin/helper function MUST retain its trailing underscore. */
 const RSVP = Object.freeze({
+  roomLimits: Object.freeze({ 'Dobbeltrom': 10, 'Superior Dobbeltrom': 30, 'Enkeltrom': 10 }),
   deadline: '2027-01-04T00:00:00+01:00',
   origins: ['https://marthaogsondre.no', 'https://www.marthaogsondre.no'],
   invitationHeaders: ['Invitation ID', 'Code hash', 'Active'],
@@ -47,7 +48,7 @@ function authorized_(book, token) {
   return String(matches[0][0]);
 }
 function guestData_(row) {
-  return { id: String(row[1]), name: String(row[2]), wedding: row[3] || '', friday: row[4] || '', allergies: row[5] || '', accommodation: row[6] || '', stayPeriod: row[15] || '', drinkPackage: row[14] || '', status: row[8] || 'Ikke svart', updated: row[9] instanceof Date ? row[9].toISOString() : String(row[9] || ''), revision: Number(row[10]) || 0 };
+  return { id: String(row[1]), name: String(row[2]), wedding: row[3] || '', friday: row[4] || '', allergies: row[5] || '', accommodation: row[6] || '', roomType: row[7] || '', stayPeriod: row[15] || '', drinkPackage: row[14] || '', status: row[8] || 'Ikke svart', updated: row[9] instanceof Date ? row[9].toISOString() : String(row[9] || ''), revision: Number(row[10]) || 0 };
 }
 function getInvitation(token) {
   const lock = LockService.getScriptLock();
@@ -55,9 +56,10 @@ function getInvitation(token) {
   try {
     const book = book_();
     const id = authorized_(book, token);
-    const guests = table_(book, 'Guests', RSVP.guestHeaders).rows.filter(r => String(r[0]) === id && r[1]).map(guestData_);
+    const rows = table_(book, 'Guests', RSVP.guestHeaders).rows;
+    const guests = rows.filter(r => String(r[0]) === id && r[1]).map(guestData_);
     if (!guests.length) throw new Error('Invitasjonen mangler gjester. Kontakt brudeparet.');
-    return { guests, closed: Date.now() >= config_().deadline, deadline: RSVP.deadline };
+    return { guests, roomAvailability: roomAvailability_(rows, id), closed: Date.now() >= config_().deadline, deadline: RSVP.deadline };
   } finally { lock.releaseLock(); }
 }
 function answer_(value) {
@@ -69,8 +71,10 @@ function validate_(input) {
   if (typeof input.guestId !== 'string' || !/^[\w-]{1,80}$/.test(input.guestId)) throw new Error('Ugyldig gjest.');
   if (typeof input.requestId !== 'string' || !/^[a-f0-9]{32,64}$/.test(input.requestId)) throw new Error('Ugyldig innsending. Last siden på nytt.');
   if (!Number.isSafeInteger(input.revision) || input.revision < 0) throw new Error('Ugyldig versjon. Last inn svarene på nytt.');
-  const wedding = answer_(input.wedding), friday = answer_(input.friday);
-  let allergies = '', accommodation = '', drinkPackage = '', stayPeriod = '';
+  const wedding = answer_(input.wedding);
+  if (!['Ja', 'Nei', 'Usikker'].includes(input.friday)) throw new Error('Velg ja, nei eller usikker for sammenkomsten fredag.');
+  const friday = input.friday;
+  let allergies = '', accommodation = '', drinkPackage = '', stayPeriod = '', roomType = '';
   if (wedding === 'Ja') {
     if (!['Med alkohol', 'Uten alkohol'].includes(input.drinkPackage)) throw new Error('Velg drikkepakke med eller uten alkohol. Last siden på nytt hvis du ikke ser valget.');
     drinkPackage = input.drinkPackage;
@@ -78,44 +82,90 @@ function validate_(input) {
     if (accommodation === 'Ja') {
       if (!['Fredag til søndag', 'Lørdag til søndag'].includes(input.stayPeriod)) throw new Error('Velg om du ønsker rom fra fredag til søndag eller fra lørdag til søndag.');
       stayPeriod = input.stayPeriod;
+      if (!['Dobbeltrom', 'Superior Dobbeltrom', 'Enkeltrom'].includes(input.roomType)) throw new Error('Velg ønsket romtype.');
+      roomType = input.roomType;
     }
     if (typeof input.allergies !== 'string' || input.allergies.length > 1000 || /[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(input.allergies)) throw new Error('Matbehov må være tekst på maksimalt 1000 tegn.');
     allergies = input.allergies.trim();
   }
-  return { guestId: input.guestId, requestId: input.requestId, revision: input.revision, wedding, friday, allergies, accommodation, drinkPackage, stayPeriod };
+  return { guestId: input.guestId, requestId: input.requestId, revision: input.revision, wedding, friday, allergies, accommodation, drinkPackage, stayPeriod, roomType };
 }
 function safeCell_(value) {
   // Prevent spreadsheet formulas from user-controlled text, including leading spaces.
   return /^[\s]*[=+@-]/.test(value) ? "'" + value : value;
 }
+// Room usage is derived from the current Guests rows, never from browser counters.
+// Every stay includes Saturday. Two guests on one invitation share a double room;
+// single rooms count once per guest. Different invitations never share implicitly.
+function roomUsage_(rows) {
+  const groups = new Map();
+  rows.forEach(row => {
+    if (row[3] !== 'Ja' || row[6] !== 'Ja' || !row[0] || !row[1] || !RSVP.roomLimits[row[7]]) return;
+    const key = JSON.stringify([String(row[0]), row[7]]);
+    groups.set(key, (groups.get(key) || 0) + 1);
+  });
+  const usage = Object.fromEntries(Object.keys(RSVP.roomLimits).map(type => [type, 0]));
+  groups.forEach((people, key) => {
+    const type = JSON.parse(key)[1];
+    usage[type] += Math.ceil(people / (type === 'Enkeltrom' ? 1 : 2));
+  });
+  return usage;
+}
+function roomAvailability_(rows, invitationId) {
+  const total = roomUsage_(rows);
+  const others = roomUsage_(rows.filter(row => String(row[0]) !== invitationId));
+  return Object.fromEntries(Object.entries(RSVP.roomLimits).map(([type, limit]) => [type, {
+    remaining: Math.max(0, limit - total[type]),
+    availableForInvitation: Math.max(0, limit - others[type])
+  }]));
+}
 function saveGuest(token, input) {
-  const data = validate_(input);
+  const result = saveAnswers_(token, [input]);
+  return { guest: result.guests[0], duplicate: result.duplicate, roomAvailability: result.roomAvailability };
+}
+function saveInvitation(token, inputs) {
+  return saveAnswers_(token, inputs);
+}
+function saveAnswers_(token, inputs) {
+  if (!Array.isArray(inputs) || !inputs.length || inputs.length > 100) throw new Error('Ugyldig innsending.');
+  const answers = inputs.map(validate_);
+  if (new Set(answers.map(data => data.guestId)).size !== answers.length) throw new Error('En gjest kan bare forekomme én gang.');
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(10000)) throw new Error('Det er litt trafikk akkurat nå. Prøv igjen om et øyeblikk.');
   try {
     const book = book_(), invitationId = authorized_(book, token);
     const table = table_(book, 'Guests', RSVP.guestHeaders);
-    const matching = table.rows.map((row, i) => ({ row, i })).filter(x => String(x.row[0]) === invitationId && String(x.row[1]) === data.guestId);
-    if (matching.length !== 1) throw new Error('Denne gjesten tilhører ikke invitasjonen, eller gjestelisten må kontrolleres.');
-    const { row, i } = matching[0];
-    const requestHash = hash_(JSON.stringify(data));
-    // A retry after a lost success response returns the already committed result.
-    if (row[11] === data.requestId) {
-      if (row[12] !== requestHash) throw new Error('Innsendingen er endret. Last inn svarene på nytt.');
-      return { guest: guestData_(row), duplicate: true };
-    }
-    // Check after acquiring the lock, so waiting never permits a late write.
-    if (Date.now() >= config_().deadline) throw new Error('Svarfristen 3. januar 2027 er passert. Kontakt oss hvis noe har endret seg.');
-    if ((Number(row[10]) || 0) !== data.revision) throw new Error('Svaret er endret i et annet vindu. Hent siste svar før du prøver igjen.');
-    const updated = Array.from({ length: RSVP.guestHeaders.length }, (_, index) => row[index] ?? '');
-    updated[3] = data.wedding; updated[4] = data.friday; updated[5] = safeCell_(data.allergies);
-    updated[6] = data.accommodation; updated[7] = ''; updated[8] = 'Svart'; updated[9] = new Date();
-    updated[10] = data.revision + 1; updated[11] = data.requestId; updated[12] = requestHash;
-    updated[14] = data.drinkPackage; updated[15] = data.stayPeriod;
-    table.sheet.getRange(i + 2, 1, 1, updated.length).setValues([updated]);
+    const changes = answers.map(data => {
+      const matching = table.rows.map((row, i) => ({ row, i })).filter(x => String(x.row[0]) === invitationId && String(x.row[1]) === data.guestId);
+      if (matching.length !== 1) throw new Error('Denne gjesten tilhører ikke invitasjonen, eller gjestelisten må kontrolleres.');
+      const { row, i } = matching[0];
+      const requestHash = hash_(JSON.stringify(data));
+      if (row[11] === data.requestId) {
+        if (row[12] !== requestHash) throw new Error('Innsendingen er endret. Last inn svarene på nytt.');
+        return { i, updated: row, duplicate: true };
+      }
+      if (Date.now() >= config_().deadline) throw new Error('Svarfristen 3. januar 2027 er passert. Kontakt oss hvis noe har endret seg.');
+      if ((Number(row[10]) || 0) !== data.revision) throw new Error('Svaret er endret i et annet vindu. Hent siste svar før du prøver igjen.');
+      const updated = Array.from({ length: RSVP.guestHeaders.length }, (_, index) => row[index] ?? '');
+      updated[3] = data.wedding; updated[4] = data.friday; updated[5] = safeCell_(data.allergies);
+      updated[6] = data.accommodation; updated[7] = data.roomType; updated[8] = 'Svart'; updated[9] = new Date();
+      updated[10] = data.revision + 1; updated[11] = data.requestId; updated[12] = requestHash;
+      updated[14] = data.drinkPackage; updated[15] = data.stayPeriod;
+      return { i, updated, duplicate: false };
+    });
+    const candidate = table.rows.map(row => row.slice());
+    changes.forEach(change => { candidate[change.i] = change.updated; });
+    const before = roomUsage_(table.rows), after = roomUsage_(candidate);
+    // Check the whole invitation under the same lock BEFORE writing any guest.
+    // Existing reservations remain editable even if an administrator lowered a limit.
+    Object.entries(RSVP.roomLimits).forEach(([type, limit]) => {
+      if (after[type] > limit && after[type] > before[type]) throw new Error(type + ' er dessverre fullbooket. Velg en annen romtype og send inn på nytt.');
+    });
+    changes.filter(change => !change.duplicate).forEach(change => {
+      table.sheet.getRange(change.i + 2, 1, 1, RSVP.guestHeaders.length).setValues([change.updated]);
+    });
     SpreadsheetApp.flush();
-    // Confirm only after the write and flush have succeeded.
-    return { guest: guestData_(updated), duplicate: false };
+    return { guests: changes.map(change => guestData_(change.updated)), duplicate: changes.every(change => change.duplicate), roomAvailability: roomAvailability_(candidate, invitationId) };
   } finally { lock.releaseLock(); }
 }
 

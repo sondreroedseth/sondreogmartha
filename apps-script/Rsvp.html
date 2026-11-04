@@ -9,6 +9,9 @@
     :root{color-scheme:light;--paper:#fffaf5;--text:#655c51;--muted:#847568;--green:#667052;--gold:#af9160;--line:#d9bca580}
     *{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;padding:6px;background:transparent;color:var(--text);font:20px/1.5 'Cormorant Garamond',Georgia,serif}p{margin:0 0 18px}h2{font-size:32px;line-height:1.2;font-weight:400;margin:0 0 7px;color:var(--green)}button,input,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:wait;opacity:.6}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
     .guest{padding:27px;background:var(--paper);border:1px solid var(--line);margin:0 0 22px;animation:appear .35s ease-out}.saved{color:var(--muted);font-size:17px;margin:0 0 20px}.question{display:block;margin:22px 0 8px;font-size:21px}fieldset{border:0;padding:0;margin:22px 0 0;min-width:0}legend{padding:0;margin-bottom:8px}.choices{display:flex;flex-wrap:wrap;gap:10px}.choice{display:flex;align-items:center;gap:10px;min-height:48px;padding:9px 18px;border:1px solid var(--line);cursor:pointer}.choice:has(input:checked){border-color:var(--green);background:#e9eddf}.choice input{accent-color:var(--green);width:18px;height:18px;margin:0}textarea{display:block;width:100%;resize:vertical;min-height:100px;padding:12px;border:1px solid var(--line);background:#fff;color:var(--text)}.hint{font-size:17px;color:var(--muted);margin:8px 0 0}.primary,.secondary{border:1px solid var(--green);padding:12px 20px;min-height:48px;border-radius:2px;line-height:1.3}.primary{background:var(--green);color:var(--paper);width:100%;margin-top:24px}.primary:hover{background:#566143}.secondary{background:transparent;color:var(--green);margin-top:12px}.message{padding:15px 18px;margin:18px 0 0;border-left:3px solid var(--green);background:#e9eddf}.error{border-color:#974f40;background:#fbebe5}.closed{padding:20px;background:var(--paper);border:1px solid var(--line)}.privacy{font-size:17px;color:var(--muted);padding:0 8px;text-align:center}.notice{padding:20px;background:var(--paper)}@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}@media(max-width:480px){.guest{padding:20px 17px}body{padding:2px;font-size:19px}.choice{flex:1}h2{font-size:29px}}@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+    .invitation-fields{margin-top:0}.invitation-fields>div>fieldset>fieldset{margin-top:15px}.choice{overflow-wrap:anywhere}.choices{min-width:0}
+    .stay-options .choices{display:grid;grid-template-columns:1fr}.room-options .choices{display:grid;grid-template-columns:1fr}.room-options .choice{align-items:flex-start;padding:14px 16px}.room-options input{flex-shrink:0;margin-top:6px}.room-description{display:block}.room-description strong{display:block;font-weight:600}.room-price{display:block;font-size:17px;line-height:1.45;color:var(--muted)}
+    @media(max-width:480px){.friday-options .choice:last-child{flex-basis:100%}}
   </style>
 </head>
 <body>
@@ -23,7 +26,7 @@
     'use strict';
     const boot = <?!= bootstrap ?>;
     const loading = document.querySelector('#loading');
-    let token = '', initialized = false, closed = false, inFlight = 0;
+    let token = '', initialized = false, closed = false, inFlight = 0, roomAvailability = {};
     const pending = new Map();
     function send(type, extra = {}) { window.top.postMessage({ app: 'wedding-rsvp', channel: boot.channel, type, ...extra }, boot.parent); }
     function rpc(name, ...args) {
@@ -53,68 +56,178 @@
       el.textContent = text; el.className = 'message' + (error ? ' error' : ''); el.hidden = false;
       el.setAttribute('role', error ? 'alert' : 'status');
     }
-    function guestForm(initial) {
-      let guest = initial;
-      const card = node('article', '', 'guest'), heading = node('h2', guest.name);
-      const saved = node('p', guest.status === 'Svart' ? 'Tidligere svar er hentet. Du kan endre dem frem til 3. januar 2027.' : 'Vi vil gjerne høre om du kommer.', 'saved');
-      card.append(heading, saved);
-      const form = document.createElement('form'); form.autocomplete = 'off'; card.append(form);
-      const fields = node('fieldset'); fields.setAttribute('aria-label', 'Svar for ' + guest.name); form.append(fields);
-      radio(fields, guest.id, 'wedding', 'Kommer du i bryllupet?', guest.wedding);
-      radio(fields, guest.id, 'friday', 'Deltar du på sammenkomsten fredag?', guest.friday);
+    function invitationForm(initialGuests) {
+      let guests = initialGuests.map(guest => ({ ...guest }));
+      const plural = guests.length > 1;
+      const card = node('article', '', 'guest');
+      const saved = node('p', guests.some(g => g.status === 'Svart') ? (plural ? 'Tidligere svar er hentet. Dere kan endre dem frem til 3. januar 2027.' : 'Tidligere svar er hentet. Du kan endre dem frem til 3. januar 2027.') : (plural ? 'Vi vil gjerne høre om dere kommer.' : 'Vi vil gjerne høre om du kommer.'), 'saved');
+      card.append(node('h2', guests.map(g => g.name).join(' og ')), saved);
+      const form = node('form'); form.autocomplete = 'off'; card.append(form);
+      const fields = node('fieldset'); fields.className = 'invitation-fields'; fields.setAttribute('aria-label', 'Svar på invitasjonen'); form.append(fields);
+      const aggregate = (key, eligible = guests) => eligible.some(g => g[key] === 'Ja') ? 'Ja' : eligible.some(g => g[key] === 'Usikker') ? 'Usikker' : eligible.length && eligible.every(g => g[key] === 'Nei') ? 'Nei' : '';
+      const wedding = radio(fields, 'invitation', 'wedding', plural ? 'Kommer dere i bryllupet?' : 'Kommer du i bryllupet?', aggregate('wedding'));
+      function people(parent, key, title, selected) {
+        const group = node('fieldset'); group.append(node('legend', title));
+        const choices = node('div', '', 'choices'); group.append(choices);
+        const entries = guests.map(g => {
+          const label = node('label', '', 'choice');
+          const input = node('input'); input.type = 'checkbox'; input.name = key; input.value = g.id; input.checked = selected(g);
+          label.append(input, document.createTextNode(g.name)); choices.append(label);
+          return { guest: g, label, input };
+        });
+        parent.append(group);
+        return { group, entries, has: guest => entries.find(e => e.guest.id === guest.id).input.checked };
+      }
+      const coming = people(fields, 'coming', 'Hvem kommer?', g => g.wedding !== 'Nei');
       const extras = node('div'); fields.append(extras);
-      radio(extras, guest.id, 'drinkPackage', 'Ønsker du drikkepakke med eller uten alkohol?', guest.drinkPackage, true, ['Med alkohol', 'Uten alkohol']);
-      const allergyLabel = node('label', 'Allergier eller andre matbehov', 'question'); allergyLabel.htmlFor = guest.id + '-allergies';
-      const allergies = document.createElement('textarea'); allergies.id = allergyLabel.htmlFor; allergies.name = 'allergies'; allergies.maxLength = 1000; allergies.value = guest.allergies;
-      extras.append(allergyLabel, allergies, node('p', 'Valgfritt. Beskriv bare matbehov som er relevante for serveringen.', 'hint'));
-      radio(extras, guest.id, 'accommodation', 'Ønsker du overnatting på Lysebu?', guest.accommodation);
-      const stay = radio(extras, guest.id, 'stayPeriod', 'Når ønsker du å bo på hotellet?', guest.stayPeriod, true, ['Fredag til søndag', 'Lørdag til søndag']);
-      const submit = node('button', guest.status === 'Svart' ? 'Lagre endringer' : 'Send svar', 'primary'); submit.type = 'submit'; fields.append(submit);
+      const friday = radio(extras, 'invitation', 'friday', plural ? 'Deltar dere på sammenkomsten fredag?' : 'Deltar du på sammenkomsten fredag?', aggregate('friday'), true, ['Ja', 'Nei', 'Usikker']);
+      friday.className = 'friday-options';
+      const fridayHint = node('p', plural ? 'Ta kontakt med oss når det nærmer seg, og gi beskjed om dere blir med på fredag.' : 'Ta kontakt med oss når det nærmer seg, og gi beskjed om du blir med på fredag.', 'hint');
+      friday.append(fridayHint);
+      const fridayPeople = people(extras, 'fridayPeople', 'Hvem deltar fredag?', g => g.friday !== 'Nei' && g.friday !== 'Usikker');
+      const fridayUncertain = people(extras, 'fridayUncertain', 'Hvem er fortsatt usikre på fredag? (valgfritt)', g => g.friday === 'Usikker');
+      const drinks = node('fieldset'); drinks.append(node('legend', plural ? 'Hvilken drikkepakke ønsker dere?' : 'Hvilken drikkepakke ønsker du?')); extras.append(drinks);
+      const drinkRows = guests.map(g => ({ guest: g, group: radio(drinks, g.id, g.id + '-drink', g.name, g.drinkPackage, true, ['Med alkohol', 'Uten alkohol']) }));
+      const allergyAnswer = guests.some(g => g.allergies) ? 'Ja' : guests.every(g => g.status === 'Svart') ? 'Nei' : '';
+      const allergies = radio(extras, 'invitation', 'hasAllergies', plural ? 'Har noen av dere allergier eller andre matbehov?' : 'Har du allergier eller andre matbehov?', allergyAnswer);
+      const allergyPeople = people(extras, 'allergyPeople', 'Hvem gjelder det?', g => !!g.allergies);
+      const allergyRows = guests.map(g => {
+        const group = node('div');
+        const label = node('label', 'Matbehov for ' + g.name, 'question'); label.htmlFor = g.id + '-allergies';
+        const input = node('textarea'); input.id = label.htmlFor; input.name = g.id + '-allergies'; input.maxLength = 1000; input.required = true; input.value = g.allergies;
+        group.append(label, input, node('p', 'Beskriv bare matbehov som er relevante for serveringen.', 'hint')); extras.append(group);
+        return { guest: g, group, input };
+      });
+      const accommodation = radio(extras, 'invitation', 'accommodation', plural ? 'Ønsker dere overnatting på Lysebu?' : 'Ønsker du overnatting på Lysebu?', aggregate('accommodation'));
+      const hotelPeople = people(extras, 'hotelPeople', 'Hvem skal overnatte?', g => g.accommodation !== 'Nei');
+      const periods = ['Fredag til søndag', 'Lørdag til søndag'];
+      const existingStays = guests.filter(g => g.accommodation === 'Ja').map(g => g.stayPeriod);
+      const mixed = new Set(existingStays).size > 1;
+      const stay = radio(extras, 'invitation', 'stayPeriod', plural ? 'Når ønsker dere å bo på hotellet?' : 'Når ønsker du å bo på hotellet?', mixed ? 'Ulike opphold' : existingStays[0] || '', true, plural ? [...periods, 'Ulike opphold'] : periods);
+      stay.className = 'stay-options';
+      const stayRows = guests.map(g => ({ guest: g, group: radio(extras, g.id, g.id + '-stay', 'Opphold for ' + g.name, g.stayPeriod, true, periods) }));
+      const roomTypes = ['Dobbeltrom', 'Superior Dobbeltrom', 'Enkeltrom'];
+      const roomPrices = { Dobbeltrom: '2055', 'Superior Dobbeltrom': '2340', Enkeltrom: '1250' };
+      const roomValues = guests.filter(g => g.accommodation === 'Ja').map(g => g.roomType || '');
+      const room = radio(extras, 'invitation', 'roomType', plural ? 'Hvilken romtype ønsker dere?' : 'Hvilken romtype ønsker du?', new Set(roomValues).size === 1 ? roomValues[0] : '', true, roomTypes);
+      room.className = 'room-options';
+      room.querySelectorAll('label').forEach((label, i) => {
+        const title = node('span', '', 'room-description');
+        title.append(node('strong', roomTypes[i]), node('span', roomPrices[roomTypes[i]] + ' kr per natt ved 1 natt, inkl. frokost', 'room-price'), node('span', 'XXXX kr per natt ved 2 netter, inkl. frokost', 'room-price'));
+        label.lastChild.remove(); label.append(title);
+      });
+      const roomNotice = node('p', '', 'hint'); roomNotice.setAttribute('role', 'status'); room.append(roomNotice);
+      const submit = node('button', guests.every(g => g.status === 'Svart') ? 'Lagre endringer' : 'Send svar', 'primary'); submit.type = 'submit'; fields.append(submit);
       const message = node('p', '', 'message'); message.hidden = true; message.tabIndex = -1; card.append(message);
       const reload = node('button', 'Hent siste lagrede svar', 'secondary'); reload.type = 'button'; card.append(reload);
-      const sync = () => {
-        const attending = form.elements.wedding.value === 'Ja'; extras.hidden = !attending;
-        extras.querySelectorAll('input,textarea').forEach(input => { input.disabled = !attending; });
-        const staying = attending && form.elements.accommodation.value === 'Ja';
-        stay.hidden = !staying;
-        stay.querySelectorAll('input').forEach(input => { input.disabled = !staying; });
-        fields.disabled = closed;
-      };
+      const value = key => form.elements.namedItem(key)?.value || '';
+      function visible(group, show) {
+        group.hidden = !show;
+        group.querySelectorAll('input,textarea').forEach(input => { input.disabled = !show; });
+      }
+      function showPeople(picker, show, eligible) {
+        visible(picker.group, show && plural);
+        picker.entries.forEach(({ guest, label, input }) => { label.hidden = !eligible(guest); input.disabled = !show || !eligible(guest) || !plural; });
+      }
+      const attends = g => value('wedding') === 'Ja' && (!plural || coming.has(g));
+      const stays = g => attends(g) && value('accommodation') === 'Ja' && (!plural || hotelPeople.has(g));
+      function sync() {
+        showPeople(coming, value('wedding') === 'Ja', () => true);
+        const any = guests.some(attends);
+        visible(extras, any);
+        visible(friday, any);
+        fridayHint.hidden = value('friday') !== 'Usikker' && !(value('friday') === 'Ja' && guests.some(g => attends(g) && !fridayPeople.has(g) && fridayUncertain.has(g)));
+        showPeople(fridayPeople, any && value('friday') === 'Ja', attends);
+        showPeople(fridayUncertain, any && value('friday') === 'Ja' && guests.some(g => attends(g) && !fridayPeople.has(g)), g => attends(g) && !fridayPeople.has(g));
+        visible(drinks, any);
+        drinkRows.forEach(row => visible(row.group, attends(row.guest)));
+        visible(allergies, any);
+        showPeople(allergyPeople, any && value('hasAllergies') === 'Ja', attends);
+        allergyRows.forEach(row => visible(row.group, attends(row.guest) && value('hasAllergies') === 'Ja' && (!plural || allergyPeople.has(row.guest))));
+        visible(accommodation, any);
+        showPeople(hotelPeople, any && value('accommodation') === 'Ja', attends);
+        visible(stay, guests.some(stays));
+        visible(room, guests.some(stays));
+        const hotelGuests = guests.filter(stays).length;
+        let availableTypes = 0;
+        room.querySelectorAll('label').forEach(label => {
+          const input = label.querySelector('input');
+          const places = roomAvailability[input.value]?.availableForInvitation;
+          const roomsNeeded = Math.ceil(hotelGuests / (input.value === 'Enkeltrom' ? 1 : 2));
+          const available = Number.isFinite(places) && places >= roomsNeeded;
+          label.hidden = !available;
+          input.disabled = !hotelGuests || !available;
+          if (!available) input.checked = false;
+          if (available) availableTypes++;
+        });
+        roomNotice.textContent = hotelGuests && !availableTypes ? 'Det er dessverre ingen tilgjengelige romtyper for dette antallet gjester. Kontakt oss om overnatting.' : '';
+        roomNotice.hidden = !hotelGuests || availableTypes > 0;
+        stayRows.forEach(row => visible(row.group, stays(row.guest) && value('stayPeriod') === 'Ulike opphold'));
+        fields.disabled = closed || inFlight > 0;
+      }
       form.addEventListener('change', sync); sync();
-      form.addEventListener('input', () => {
-        saved.textContent = 'Endringene dine er ikke lagret ennå.';
-        message.hidden = true;
-      });
+      form.addEventListener('input', () => { saved.textContent = 'Endringene er ikke lagret ennå.'; message.hidden = true; });
+      function selectionError(picker, condition, text) {
+        if (condition && !guests.some(g => attends(g) && picker.has(g))) { setMessage(message, text, true); message.focus({ preventScroll: true }); return true; }
+        return false;
+      }
       form.addEventListener('submit', async event => {
         event.preventDefault();
-        if (fields.disabled || closed || !form.reportValidity()) return;
-        const values = new FormData(form);
-        const payload = { guestId: guest.id, revision: guest.revision, wedding: values.get('wedding'), friday: values.get('friday'), allergies: values.get('allergies') || '', accommodation: values.get('accommodation') || '', stayPeriod: values.get('stayPeriod') || '', drinkPackage: values.get('drinkPackage') || '' };
-        const fingerprint = JSON.stringify(payload);
-        const previous = pending.get(guest.id);
-        // Identical retries retain the request ID, even after a timed-out response.
+        if (closed || inFlight || !form.reportValidity()) return;
+        if (value('wedding') === 'Ja' && !guests.some(attends)) { setMessage(message, 'Velg hvem som kommer i bryllupet.', true); return; }
+        if (selectionError(fridayPeople, plural && guests.some(attends) && value('friday') === 'Ja', 'Velg hvem som deltar fredag.') ||
+            selectionError(allergyPeople, plural && guests.some(attends) && value('hasAllergies') === 'Ja', 'Velg hvem matbehovene gjelder for.') ||
+            selectionError(hotelPeople, plural && guests.some(attends) && value('accommodation') === 'Ja', 'Velg hvem som ønsker overnatting.')) return;
+        if (guests.some(stays) && !room.querySelector('input:checked:not(:disabled)')) {
+          setMessage(message, 'Velg en tilgjengelig romtype. Kontakt oss hvis det ikke finnes ledige alternativer.', true); return;
+        }
+        const payloads = guests.map(g => ({
+          guestId: g.id, revision: g.revision,
+          wedding: attends(g) ? 'Ja' : 'Nei',
+          friday: !attends(g) ? 'Nei' : value('friday') === 'Usikker' ? 'Usikker' : value('friday') === 'Ja' && (!plural || fridayPeople.has(g)) ? 'Ja' : value('friday') === 'Ja' && fridayUncertain.has(g) ? 'Usikker' : 'Nei',
+          drinkPackage: attends(g) ? value(g.id + '-drink') : '',
+          allergies: attends(g) && value('hasAllergies') === 'Ja' && (!plural || allergyPeople.has(g)) ? value(g.id + '-allergies').trim() : '',
+          accommodation: attends(g) ? stays(g) ? 'Ja' : 'Nei' : '',
+          roomType: stays(g) ? value('roomType') : '',
+          stayPeriod: stays(g) ? value('stayPeriod') === 'Ulike opphold' ? value(g.id + '-stay') : value('stayPeriod') : ''
+        }));
+        const fingerprint = JSON.stringify(payloads);
+        const previous = pending.get('invitation');
         const requestId = previous?.fingerprint === fingerprint ? previous.id : id();
-        pending.set(guest.id, { fingerprint, id: requestId });
-        inFlight++; fields.disabled = true; reload.disabled = true; submit.textContent = 'Lagrer …'; message.hidden = true;
+        pending.set('invitation', { fingerprint, id: requestId });
+        inFlight++; sync(); reload.disabled = true; submit.textContent = 'Lagrer …'; message.hidden = true;
         try {
-          const result = await rpc('saveGuest', token, { ...payload, requestId });
-          guest = result.guest; pending.delete(guest.id);
-          allergies.value = guest.allergies;
-          extras.querySelectorAll('input[name="accommodation"]').forEach(input => { input.checked = input.value === guest.accommodation; });
-          stay.querySelectorAll('input').forEach(input => { input.checked = input.value === guest.stayPeriod; });
-          extras.querySelectorAll('input[name="drinkPackage"]').forEach(input => { input.checked = input.value === guest.drinkPackage; });
-          saved.textContent = 'Svaret ditt er lagret.';
-          setMessage(message, guest.wedding === 'Ja' ? 'Tusen takk for svaret! Vi gleder oss til å feire sammen med deg!' : 'Tusen takk for at du ga beskjed. Vi kommer til å savne deg på den store dagen!', false);
+          const result = await rpc('saveInvitation', token, payloads.map(payload => ({ ...payload, requestId })));
+          guests = result.guests;
+          roomAvailability = result.roomAvailability;
+          pending.delete('invitation');
+          saved.textContent = plural ? 'Svarene deres er lagret.' : 'Svaret ditt er lagret.';
+          setMessage(message, payloads.some(p => p.wedding === 'Ja') ? (plural ? 'Tusen takk for svaret! Vi gleder oss til å feire sammen med dere!' : 'Tusen takk for svaret! Vi gleder oss til å feire sammen med deg!') : (plural ? 'Tusen takk for at dere ga beskjed. Vi kommer til å savne dere på den store dagen!' : 'Tusen takk for at du ga beskjed. Vi kommer til å savne deg på den store dagen!'), false);
           message.focus({ preventScroll: true });
-        } catch (error) { setMessage(message, error.message, true); }
-        finally { inFlight--; sync(); reload.disabled = false; submit.textContent = guest.status === 'Svart' ? 'Lagre endringer' : 'Send svar'; }
+        } catch (error) {
+          try { const latest = await rpc('getInvitation', token); roomAvailability = latest.roomAvailability; }
+          catch (_) { /* Keep the draft and retry ID if the network is unavailable. */ }
+          setMessage(message, error.message + ' Hent siste lagrede svar hvis du er usikker på om lagringen ble fullført.', true);
+        } finally { inFlight--; sync(); reload.disabled = false; submit.textContent = guests.every(g => g.status === 'Svart') ? 'Lagre endringer' : 'Send svar'; }
       });
       reload.addEventListener('click', async () => {
-        if (inFlight) { setMessage(message, 'Vent til innsendingen er ferdig før du henter svarene på nytt.', true); return; }
+        if (inFlight) return;
         if (!confirm('Hente siste lagrede svar? Eventuelle endringer som ikke er sendt inn, blir erstattet.')) return;
         reload.disabled = true;
         try { await load(); } catch (error) { setMessage(message, error.message, true); reload.disabled = false; }
       });
+      const refreshAvailability = async () => {
+        if (!card.isConnected || inFlight || document.hidden) return;
+        try {
+          const latest = await rpc('getInvitation', token);
+          roomAvailability = latest.roomAvailability; closed = latest.closed;
+          document.querySelector('#closed').hidden = !closed; sync();
+        } catch (_) { /* The server checks capacity again on every submission. */ }
+      };
+      const availabilityTimer = setInterval(() => {
+        if (!card.isConnected) { clearInterval(availabilityTimer); return; }
+        refreshAvailability();
+      }, 30000);
       return card;
     }
     async function load() {
@@ -122,9 +235,9 @@
       send('profile', { names: data.guests.map(guest => guest.name) });
       loading.hidden = true;
       if (boot.mode === 'profile') return;
-      closed = data.closed;
+      closed = data.closed; roomAvailability = data.roomAvailability;
       document.querySelector('#closed').hidden = !closed;
-      document.querySelector('#guests').replaceChildren(...data.guests.map(guestForm));
+      document.querySelector('#guests').replaceChildren(invitationForm(data.guests));
       document.querySelector('#content').hidden = false;
     }
     window.addEventListener('message', async event => {

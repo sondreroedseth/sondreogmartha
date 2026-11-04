@@ -8,7 +8,7 @@ Det private RSVP-arket er opprettet på Google-kontoen. Tilgang er godkjent, og 
 
 Publisering er godkjent 18. oktober 2026. `rsvp-config.js` har `enabled: true`, og `endpoint` er fylt ut med den publiserte backend-adressen. Google Forms-knappen beholdes som reserve for besøk uten personlig kode eller ved feil. Gjennomfør den siste kontrollen på domenet etter publisering før lenkene sendes ut. Steg 1–4 nedenfor forklarer også hvordan oppsettet kan gjenskapes; ikke opprett et ekstra ark eller skript bare fordi du følger veiledningen.
 
-Romtypevalg er utelatt etter ønske i første runde. Spørsmålet om ønske om overnatting er med. `Room type` beholdes som tom kolonne for eventuell senere utvidelse. Ingen ytterligere spørsmål fra det gamle Google-skjemaet er importert; innholdet der kunne ikke hentes under arbeidet.
+Romtype lagres i kolonne H: Dobbeltrom, Superior Dobbeltrom eller Enkeltrom. Spørsmålet vises ved ønske om overnatting. Ingen ytterligere spørsmål fra det gamle Google-skjemaet er importert; innholdet der kunne ikke hentes under arbeidet.
 
 Oppdatert 1. november 2026: Ved ja til hotell er «Fredag til søndag» eller «Lørdag til søndag» obligatorisk. Perioden lagres i kolonne P, `Opphold`, og tømmes ved nei til hotell eller bryllupet. Eksisterende svar får ikke automatisk valgt periode. Både skjemautforming og lagring er publisert i Apps Script-versjon 4 på samme nettappadresse og med samme tilgang som tidligere. Google-arket er klargjort med overskrift og validering i P2:P1001, uten å endre eksisterende svar. Kolonne H beholdes uendret. Ved et nytt oppsett legger setup_ til den nye kolonnen.
 
@@ -58,10 +58,10 @@ I Guests er de ti første kolonnene de du ba om:
 | B | Guest ID |
 | C | Name |
 | D | Wedding – Ja/Nei |
-| E | Friday – Ja/Nei |
+| E | Friday – Ja/Nei/Usikker |
 | F | Allergies |
 | G | Accommodation – Ja/Nei, tomt ved nei til bryllupet |
-| H | Room type – foreløpig tom |
+| H | Room type – Dobbeltrom / Superior Dobbeltrom / Enkeltrom |
 | I | RSVP status – Ikke svart/Svart |
 | J | Last updated – dato og klokkeslett i norsk tid |
 
@@ -209,3 +209,6 @@ node tests/preview.cjs
 Den andre kommandoen starter en lokal testserver på `http://127.0.0.1:8765`, med fiktive gjester og minnelagring. Den viser en testlenke i terminalen. Serveren endrer bare svarene den sender til nettleseren; produksjonskonfigurasjonen og Google blir ikke endret. Koden som tillater localhost finnes bare i testserverens respons, ikke i produksjonsbroen. Stopp serveren med Ctrl+C etter bruk.
 
 Automatiske tester kjører den faktiske Code.gs med erstatninger for Google Sheets, klokke og lås. De dekker ja/nei, forskjellige svar på samme invitasjon, endring, duplikater, ugyldige og deaktiverte koder, andre gjesters ID-er, validering, formelinjeksjon, revisjonskonflikt, låsekonflikt, frist og lagringsfeil. Dette erstatter ikke samtidighetstesting eller lagringskontroll på ekte Google-infrastruktur. Se også RSVP_TEST_REPORT.md.
+
+
+Oppdatert 4. november 2026: Apps Script-versjon 5 er publisert på samme nettappadresse. Invitasjonen har ett samlet svarskjema, med individuelle valg for deltakelse, fredag, drikkepakke og matbehov, samt hotellrom og opphold. Friday støtter Usikker. Room type er obligatorisk ved overnatting. Kapasitet på 10 Dobbeltrom, 30 Superior Dobbeltrom og 10 Enkeltrom kontrolleres fra Guests-radene under lås ved samlet innsending. Se ROOM_CAPACITY.md. Google-arket har oppdaterte valideringer, flere summeringer i Oversikt og en Romoversikt-fane. Publisert ende-til-ende-test verifiserte alle nye felter og at to personer telt som ett superiorrom; testsvarene ble deretter nullstilt.
